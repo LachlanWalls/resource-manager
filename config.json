@@ -1,10 +1,15 @@
 {
+    "sitename": "My Amazing Resource Manager",
+    "logging": true,
+    "admin": {
+        "username": "admin",
+        "password": "admin"
+    },
     "mariaoptions": {
         "host": "localhost",
         "port": 3306,
         "user": "resource-manager",
         "password": "O0n4bEsD1IzmN1T2WYyx",
         "database": "resource-manager"
-    },
-    "logging": true
+    }
 }

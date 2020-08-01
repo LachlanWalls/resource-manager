@@ -5,6 +5,7 @@ const config = require('./config.json')
 const mariadb = require('mariadb')
 
 
+app.use(express.json())
 app.get('/', (req, res) => res.send('Hello, world!'))
 
 

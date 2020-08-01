@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>%SITENAME% - Login</title>
+</head>
+<body>
+    <h1>Login</h1>
+    <form action="javascript:void(0);">
+        <input type="text" name="username" placeholder="username" autocomplete="username">
+        <input type="password" name="password" placeholder="password" autocomplete="current-password">
+        <button class="login">Login</button>
+    </form>
+    <p></p>
+    <script>
+
+document.querySelector('.login').addEventListener('click', async() => {
+    document.querySelector('.login').setAttribute('disabled', '')
+
+    const res = await fetch('/auth/login', {
+        method: 'POST',
+        body: JSON.stringify({
+            username: document.querySelector('input[name=username]').value,
+            password: document.querySelector('input[name=password]').value,
+        }),
+        headers: { 'Content-Type': 'application/json' }
+    }).then(res => res.json())
+
+    if (res.token) {
+        localStorage.setItem('token', res.token)
+        if (res.redir) return location.assign(res.redir)
+        let params = new URLSearchParams(location.search)
+        if (params.get('redir')) return location.assign(params.get('redir'))
+        return location.assign('/')
+    }
+
+    document.querySelector('p').innerHTML = 'error: ' + res.err.split('-').join(' ')
+    document.querySelector('.login').removeAttribute('disabled')
+})
+
+    </script>
+</body>
+</html>
