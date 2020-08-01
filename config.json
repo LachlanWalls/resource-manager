@@ -5,5 +5,6 @@
         "user": "resource-manager",
         "password": "O0n4bEsD1IzmN1T2WYyx",
         "database": "resource-manager"
-    }
+    },
+    "logging": true
 }

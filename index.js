@@ -1,22 +1,24 @@
 const express = require('express')
 const app = express()
-
-const mariadb = require('mariadb')
-let conn = null
-
+const fs = require('fs')
 const config = require('./config.json')
+const mariadb = require('mariadb')
+
 
 app.get('/', (req, res) => res.send('Hello, world!'))
 
-app.get('/test', async(req, res) => {
-    res.send('ok')
-    let results = await conn.query('SELECT * FROM users;')
-    console.log(results)
-})
 
-mariadb.createConnection(config.mariaoptions).then(con => {
+mariadb.createConnection(config.mariaoptions).then(async con => {
 
-    conn = con
+    const routerFiles = fs.readdirSync('./routers')
+
+    for (const routerFile of routerFiles) {
+        const routerObj = require('./routers/' + routerFile)
+        const router = await routerObj.generate(config, con)
+        app.use(routerObj.path, router)
+        if (config.logging) console.log('router online for ' + routerObj.path + (routerObj.name ? ` (${routerObj.name})` : ''))
+    }
+
     app.listen(8080, () => console.log('resource-manager listening on localhost:8080'))
 
 }).catch(console.error)
