@@ -6,7 +6,10 @@ const mariadb = require('mariadb')
 
 
 app.use(express.json())
-app.get('/', (req, res) => res.send('Hello, world!'))
+app.use(express.static('public'))
+
+const render = require('./scripts/render')
+app.get('/', (req, res) => res.send(render(__dirname + '/html/home.html')))
 
 
 mariadb.createConnection(config.mariaoptions).then(async con => {

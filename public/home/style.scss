@@ -1,0 +1,26 @@
+* {
+    font-family: 'Open Sans', sans-serif;
+    font-weight: normal;
+}
+
+body {
+    margin: 0;
+    background: rgb(240,252,255);
+    width: 100vw;
+    height: 100vh;
+}
+
+.loader {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    background: rgb(240,252,255);
+    text-align: center;
+
+    h3 {
+        margin-top: 50vh;
+        transform: translateY(-50%);
+    }
+}

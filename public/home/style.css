@@ -1,0 +1,27 @@
+* {
+  font-family: 'Open Sans', sans-serif;
+  font-weight: normal;
+}
+
+body {
+  margin: 0;
+  background: #f0fcff;
+  width: 100vw;
+  height: 100vh;
+}
+
+.loader {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  background: #f0fcff;
+  text-align: center;
+}
+
+.loader h3 {
+  margin-top: 50vh;
+  -webkit-transform: translateY(-50%);
+          transform: translateY(-50%);
+}
