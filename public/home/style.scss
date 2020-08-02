@@ -5,7 +5,7 @@
 
 body {
     margin: 0;
-    background: rgb(240,252,255);
+    background: rgb(248, 254, 255);
     width: 100vw;
     height: 100vh;
 }
@@ -16,11 +16,95 @@ body {
     height: 100vh;
     top: 0;
     left: 0;
-    background: rgb(240,252,255);
+    background: rgb(248, 254, 255);
     text-align: center;
 
     h3 {
         margin-top: 50vh;
         transform: translateY(-50%);
+    }
+}
+
+#nav {
+    position: fixed;
+    width: 100vw;
+    height: auto;
+    min-height: 64px;
+    top: 0;
+    left: 0;
+    background-color: white;
+    filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.08));
+
+    .progress {
+        position: absolute;
+        width: 100vw;
+        height: 2px;
+        top: 0;
+        left: 0;
+
+        .bar {
+            background-color: rgb(0, 174, 255);
+            width: 0%;
+            height: 2px;
+            opacity: 0;
+        }
+
+        &[status=loading] .bar {
+            opacity: 1;
+            width: 90vw;
+            transition: width 10s 0s cubic-bezier(0.1, 0.88, 0.25, 1), opacity .4s;
+        }
+
+        &[status=complete] .bar {
+            width: 100vw;
+            opacity: 0;
+            transition: width .2s, opacity .4s;
+        }
+    }
+
+    h1 {
+        font-size: 24px;
+        margin: 20px;
+        line-height: 1;
+        font-weight: bold;
+        float: left;
+    }
+
+    .links {
+        height: auto;
+        min-height: 16px;
+        margin: 20px 24px;
+        float: right;
+
+        .link {
+            display: inline-block;
+            vertical-align: middle;
+            font-size: 16px;
+            padding: 0 12px;
+            opacity: 0.8;
+            transition: opacity .1s;
+            cursor: pointer;
+            text-decoration: none;
+            color: black;
+
+            &.user {
+                font-weight: bold;
+                transform: translateY(2px);
+                padding-left: 28px;
+
+                i {
+                    vertical-align: top;
+                    height: 26px;
+                }
+            }
+
+            &:hover {
+                opacity: 1;
+
+                &:not(.user) {
+                    text-decoration: underline;
+                }
+            }
+        }
     }
 }

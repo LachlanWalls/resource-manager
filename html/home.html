@@ -5,9 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>%SITENAME%</title>
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="/home/style.css">
+    <script>
+        const SITENAME = '%SITENAME%'
+    </script>
 </head>
 <body>
+    <div id="nav">
+        <div class="progress"><div class="bar"></div></div>
+        <h1>%SITENAME%</h1>
+        <div class="links">
+            <a class="link" href="/resources" onclick="return Router.ago(this.href);">Resources</a>
+            <a class="link" href="/loans" onclick="return Router.ago(this.href);">Loans</a>
+            <a class="link" href="/users" onclick="return Router.ago(this.href);">Users</a>
+            <a class="link user"></a>
+        </div>
+    </div>
     <section id="main">
         <h1>%SITENAME%</h1>
         <p></p>
