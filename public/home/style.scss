@@ -43,10 +43,11 @@ body {
         left: 0;
 
         .bar {
-            background-color: rgb(0, 174, 255);
             width: 0%;
             height: 2px;
             opacity: 0;
+            background-color: rgb(0, 174, 255);
+            filter: drop-shadow(0 2px 2px #00aeff);
         }
 
         &[status=loading] .bar {
@@ -62,39 +63,47 @@ body {
         }
     }
 
-    h1 {
+    a.h1 {
         font-size: 24px;
         margin: 20px;
         line-height: 1;
         font-weight: bold;
         float: left;
+        color: black;
+        text-decoration: none;
     }
 
     .links {
         height: auto;
-        min-height: 16px;
-        margin: 20px 24px;
+        min-height: 48px;
+        margin: 8px 24px 0 24px;
         float: right;
 
         .link {
             display: inline-block;
             vertical-align: middle;
             font-size: 16px;
-            padding: 0 12px;
+            height: 16px;
+            line-height: 1;
+            padding: 16px 12px 24px 12px;
             opacity: 0.8;
             transition: opacity .1s;
             cursor: pointer;
             text-decoration: none;
             color: black;
+            user-select: none;
 
             &.user {
                 font-weight: bold;
-                transform: translateY(2px);
-                padding-left: 28px;
+                margin-top: -7px;
 
                 i {
-                    vertical-align: top;
+                    vertical-align: middle;
                     height: 26px;
+                }
+
+                &:hover~.usermenu {
+                    display: block;
                 }
             }
 
@@ -106,5 +115,44 @@ body {
                 }
             }
         }
+
+        .usermenu {
+            position: absolute;
+            top: calc(100% - 10px);
+            right: 24px;
+            border-radius: 4px;
+            background-color: white;
+            filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.08));
+            padding: 8px 0;
+            display: none;
+    
+            .link {
+                display: block;
+                padding: 10px 24px;
+                font-size: 16px;
+                cursor: pointer;
+                text-decoration: none;
+                color: black;
+                user-select: none;
+    
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
+
+            &:hover {
+                display: block;
+            }
+        }
+    }
+}
+
+section {
+    margin-top: 64px;
+    width: calc(100vw - 64px);
+    padding: 32px;
+    
+    &[hidden] {
+        display: none;
     }
 }

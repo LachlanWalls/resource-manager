@@ -12,9 +12,11 @@
     if (res.err) return location.assign('/auth/login')
 
     document.querySelector('.link.user').innerHTML = res.username + '<i class="material-icons">expand_more</i>'
-    document.querySelector('.loader').style.display = 'none'
 
-    window.Router = {
+    window.Handler = {
+        frontelm: "#main1",
+        backelm: "#main2",
+        logging: false,
         loader: {
             start: () => document.querySelector('#nav>.progress').setAttribute('status', 'loading'),
             end: () => {
@@ -22,23 +24,47 @@
                 window.setTimeout(() => document.querySelector('#nav>.progress').removeAttribute('status'), 400)
             }
         },
-        log: msg => console.log('%c[Router] %c' + msg, 'color: #016d91;', ''),
-        go: url => {
+        log: msg => Handler.logging ? console.log('%c[Handler] %c' + msg, 'color: #016d91;', ''):null,
+        go: (url, load = true) => {
             let start = performance.now()
-            Router.loader.start()
+            if (load) Handler.loader.start()
             url = url.replace(location.origin, '')
             history.pushState({}, SITENAME, url)
-            Router.log('loading ' + url)
-            window.setTimeout(() => {
-                Router.loader.end()
-                Router.log('completed in ' + Math.round(performance.now() - start) + 'ms')
-            }, 200)
+            Handler.log('loading ' + url)
+
+            let scripturl = Handler.pages[url] || Handler.pages['/404']
+            let script = document.createElement('script')
+            script.src = scripturl
+
+            window.renderElement = document.querySelector(Handler.backelm)
+
+            let finish = () => {
+                if (load) Handler.loader.end()
+                let newelm = Handler.backelm
+                Handler.backelm = Handler.frontelm
+                Handler.frontelm = newelm
+                document.querySelector(Handler.frontelm).removeAttribute('hidden')
+                document.querySelector(Handler.backelm).setAttribute('hidden', '')
+                document.querySelector(Handler.backelm).innerHTML = ''
+                document.querySelector('.loader').style.display = 'none'
+                document.body.removeChild(script)
+                window.removeEventListener('SPAloaded', finish)
+            }
+
+            window.addEventListener('SPAloaded', finish)
+            document.body.appendChild(script)
         },
         ago: url => {
-            Router.go(url)
+            Handler.go(url)
             return false
+        },
+        pages: {
+            '/': '/home/scripts/home.js',
+            '/404': '/home/scripts/404.js'
         }
     }
+
+    Handler.go(location.pathname, false)
 
 })()
 

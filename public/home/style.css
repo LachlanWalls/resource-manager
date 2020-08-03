@@ -47,10 +47,12 @@ body {
 }
 
 #nav .progress .bar {
-  background-color: #00aeff;
   width: 0%;
   height: 2px;
   opacity: 0;
+  background-color: #00aeff;
+  -webkit-filter: drop-shadow(0 2px 2px #00aeff);
+          filter: drop-shadow(0 2px 2px #00aeff);
 }
 
 #nav .progress[status=loading] .bar {
@@ -67,18 +69,20 @@ body {
   transition: width .2s, opacity .4s;
 }
 
-#nav h1 {
+#nav a.h1 {
   font-size: 24px;
   margin: 20px;
   line-height: 1;
   font-weight: bold;
   float: left;
+  color: black;
+  text-decoration: none;
 }
 
 #nav .links {
   height: auto;
-  min-height: 16px;
-  margin: 20px 24px;
+  min-height: 48px;
+  margin: 8px 24px 0 24px;
   float: right;
 }
 
@@ -86,25 +90,33 @@ body {
   display: inline-block;
   vertical-align: middle;
   font-size: 16px;
-  padding: 0 12px;
+  height: 16px;
+  line-height: 1;
+  padding: 16px 12px 24px 12px;
   opacity: 0.8;
   -webkit-transition: opacity .1s;
   transition: opacity .1s;
   cursor: pointer;
   text-decoration: none;
   color: black;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
 }
 
 #nav .links .link.user {
   font-weight: bold;
-  -webkit-transform: translateY(2px);
-          transform: translateY(2px);
-  padding-left: 28px;
+  margin-top: -7px;
 }
 
 #nav .links .link.user i {
-  vertical-align: top;
+  vertical-align: middle;
   height: 26px;
+}
+
+#nav .links .link.user:hover ~ .usermenu {
+  display: block;
 }
 
 #nav .links .link:hover {
@@ -113,4 +125,47 @@ body {
 
 #nav .links .link:hover:not(.user) {
   text-decoration: underline;
+}
+
+#nav .links .usermenu {
+  position: absolute;
+  top: calc(100% - 10px);
+  right: 24px;
+  border-radius: 4px;
+  background-color: white;
+  -webkit-filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.08));
+          filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.08));
+  padding: 8px 0;
+  display: none;
+}
+
+#nav .links .usermenu .link {
+  display: block;
+  padding: 10px 24px;
+  font-size: 16px;
+  cursor: pointer;
+  text-decoration: none;
+  color: black;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+
+#nav .links .usermenu .link:hover {
+  text-decoration: underline;
+}
+
+#nav .links .usermenu:hover {
+  display: block;
+}
+
+section {
+  margin-top: 64px;
+  width: calc(100vw - 64px);
+  padding: 32px;
+}
+
+section[hidden] {
+  display: none;
 }

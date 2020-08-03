@@ -14,18 +14,21 @@
 <body>
     <div id="nav">
         <div class="progress"><div class="bar"></div></div>
-        <h1>%SITENAME%</h1>
+        <a class="h1" href="/" onclick="return Handler.ago(this.href);">%SITENAME%</a>
         <div class="links">
-            <a class="link" href="/resources" onclick="return Router.ago(this.href);">Resources</a>
-            <a class="link" href="/loans" onclick="return Router.ago(this.href);">Loans</a>
-            <a class="link" href="/users" onclick="return Router.ago(this.href);">Users</a>
-            <a class="link user"></a>
+            <a class="link" href="/resources" onclick="return Handler.ago(this.href);">Resources</a>
+            <a class="link" href="/loans" onclick="return Handler.ago(this.href);">Loans</a>
+            <a class="link" href="/users" onclick="return Handler.ago(this.href);">Users</a>
+            <a class="link user" href="/account" onclick="return Handler.ago(this.href);"></a>
+            <div class="usermenu">
+                <a class="link" href="/account" onclick="return Handler.ago(this.href);">Account</a>
+                <a class="link" href="/admin" onclick="return Handler.ago(this.href);">Admin</a>
+                <a class="link" onclick="localStorage.removeItem('token'); location.assign('/auth/login');">Logout</a>
+            </div>
         </div>
     </div>
-    <section id="main">
-        <h1>%SITENAME%</h1>
-        <p></p>
-    </section>
+    <section id="main1" hidden></section>
+    <section id="main2" hidden></section>
     <div class="loader">
         <h3>Loading...</h3>
     </div>
