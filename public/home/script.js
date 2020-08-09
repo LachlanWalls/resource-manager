@@ -2,15 +2,22 @@
 
     const token = localStorage.getItem('token')
     if (!token) return location.assign('/auth/login')
+
+    window.api = {
+        req: (url, method, body = {}) => {
+            let pld = {method: method, headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}`, 'Content-Type': 'application/json'} }
+            if (method !== 'GET') pld.body = JSON.stringify(body)
+            return fetch(`/api${url}`, pld).then(res => res.json())
+        },
+        get: url => window.api.req(url, 'GET'),
+        post: (url, body) => window.api.req(url, 'POST', body),
+        put: (url, body) => window.api.req(url, 'PUT', body),
+        delete: (url, body) => window.api.req(url, 'DELETE', body)
+    }
     
-    const res = await fetch('/api/token/verify', {
-        method: 'POST',
-        body: JSON.stringify({token: token}),
-        headers: { 'Content-Type': 'application/json' }
-    }).then(res => res.json())
+    const res = await api.post('/token/verify', {token: token})
 
     if (res.err) return location.assign('/auth/login')
-
     document.querySelector('.link.user').innerHTML = res.username + '<i class="material-icons">expand_more</i>'
 
     window.Handler = {
