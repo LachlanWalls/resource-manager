@@ -1,5 +1,7 @@
 (async() => {
 
+    window.dcache = {}
+
     const token = localStorage.getItem('token')
     if (!token) return location.assign('/auth/login')
 
@@ -39,7 +41,9 @@
             history.pushState({}, SITENAME, url)
             Handler.log('loading ' + url)
 
-            let scripturl = Handler.pages[url] || Handler.pages['/404']
+            let matchingpages = Object.keys(Handler.pages).filter(k => url.match(new RegExp(k)))
+            if (matchingpages.length > 0) scripturl = Handler.pages[matchingpages[0]]
+
             let script = document.createElement('script')
             script.src = scripturl
 
@@ -66,8 +70,9 @@
             return false
         },
         pages: {
-            '/': '/home/scripts/home.js',
-            '/404': '/home/scripts/404.js'
+            '^\/$': '/home/scripts/home.js',
+            '^\/users$': '/home/scripts/users.js',
+            '^.+$': '/home/scripts/404.js'
         }
     }
 

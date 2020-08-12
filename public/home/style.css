@@ -36,6 +36,7 @@ body {
   background-color: white;
   -webkit-filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.08));
           filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.08));
+  z-index: 10;
 }
 
 #nav .progress {
@@ -51,8 +52,8 @@ body {
   height: 2px;
   opacity: 0;
   background-color: #00aeff;
-  -webkit-filter: drop-shadow(0 2px 2px #00aeff);
-          filter: drop-shadow(0 2px 2px #00aeff);
+  -webkit-filter: drop-shadow(0 0 2px #00aeff);
+          filter: drop-shadow(0 0 2px #00aeff);
 }
 
 #nav .progress[status=loading] .bar {
@@ -137,6 +138,7 @@ body {
           filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.08));
   padding: 8px 0;
   display: none;
+  z-index: 11;
 }
 
 #nav .links .usermenu .link {
@@ -161,6 +163,7 @@ body {
 }
 
 section {
+  z-index: 1;
   margin-top: 64px;
   width: calc(100vw - 64px);
   padding: 32px;
@@ -168,4 +171,26 @@ section {
 
 section[hidden] {
   display: none;
+}
+
+table {
+  width: 100%;
+  background-color: white;
+  border-radius: 8px;
+  -webkit-filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.05));
+          filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.05));
+}
+
+table th {
+  font-weight: bold;
+  text-align: left;
+  padding: 16px;
+}
+
+table td {
+  font-weight: normal;
+  text-align: left;
+  opacity: 0.9;
+  padding: 12px;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
 }

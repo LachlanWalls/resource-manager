@@ -34,6 +34,7 @@ body {
     left: 0;
     background-color: white;
     filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.08));
+    z-index: 10;
 
     .progress {
         position: absolute;
@@ -47,7 +48,7 @@ body {
             height: 2px;
             opacity: 0;
             background-color: rgb(0, 174, 255);
-            filter: drop-shadow(0 2px 2px #00aeff);
+            filter: drop-shadow(0 0 2px #00aeff);
         }
 
         &[status=loading] .bar {
@@ -125,6 +126,7 @@ body {
             filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.08));
             padding: 8px 0;
             display: none;
+            z-index: 11;
     
             .link {
                 display: block;
@@ -148,11 +150,33 @@ body {
 }
 
 section {
+    z-index: 1;
     margin-top: 64px;
     width: calc(100vw - 64px);
     padding: 32px;
     
     &[hidden] {
         display: none;
+    }
+}
+
+table {
+    width: 100%;
+    background-color: white;
+    border-radius: 8px;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.05));
+
+    th {
+        font-weight: bold;
+        text-align: left;
+        padding: 16px;
+    }
+
+    td {
+        font-weight: normal;
+        text-align: left;
+        opacity: 0.9;
+        padding: 12px;
+        border-top: 1px solid rgba(0, 0, 0, 0.1);
     }
 }
