@@ -1,15 +1,41 @@
 (async() => {
 
     window.dcache = {}
+    window.CONSTANTS = {
+        PERMISSIONS: [
+            'ADMIN',
+            'MANAGE_USERS',
+            'MANAGE_LOANS',
+            'MANAGE_TAGS',
+            'MANAGE_RESOURCES'
+        ]
+    }
 
     const token = localStorage.getItem('token')
     if (!token) return location.assign('/auth/login')
 
+    window.Notif = (text, type) => {
+        let elm = document.createElement('div')
+        elm.className = 'notification'
+        elm.innerHTML = `<i class='material-icons'>${type}</i><span>${text}</span>`
+        document.querySelector('#notifications').appendChild(elm)
+        return {
+            setText: text => elm.innerHTML = elm.innerHTML.split('<span>')[0] + `<span>${text}</span>`,
+            setType: type => elm.innerHTML = `<i class='material-icons'>${type}</i>` + elm.innerHTML.split('</i>')[1],
+            remove: () => elm.parentElement.removeChild(elm)
+        }
+    }
+
     window.api = {
-        req: (url, method, body = {}) => {
+        req: async(url, method, body = {}) => {
             let pld = {method: method, headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}`, 'Content-Type': 'application/json'} }
             if (method !== 'GET') pld.body = JSON.stringify(body)
-            return fetch(`/api${url}`, pld).then(res => res.json())
+            const res = await fetch(`/api${url}`, pld).then(res => res.text())
+            try {
+                return JSON.parse(res)
+            } catch(e) {
+                return res
+            }
         },
         get: url => window.api.req(url, 'GET'),
         post: (url, body) => window.api.req(url, 'POST', body),
@@ -34,8 +60,7 @@
             }
         },
         log: msg => Handler.logging ? console.log('%c[Handler] %c' + msg, 'color: #016d91;', ''):null,
-        go: (url, load = true) => {
-            let start = performance.now()
+        go: (url = location.pathname, load = true) => {
             if (load) Handler.loader.start()
             url = url.replace(location.origin, '')
             history.pushState({}, SITENAME, url)
@@ -72,11 +97,13 @@
         pages: {
             '^\/$': '/home/scripts/home.js',
             '^\/users$': '/home/scripts/users.js',
+            '^\/users\/.+$': '/home/scripts/users_specific.js',
             '^.+$': '/home/scripts/404.js'
         }
     }
 
     Handler.go(location.pathname, false)
+    window.addEventListener('popstate', () => Handler.go())
 
 })()
 
