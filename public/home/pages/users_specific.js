@@ -130,8 +130,7 @@
             if (tog.getAttribute('checked') === '') tog.removeAttribute('checked')
             else tog.setAttribute('checked', '')
             tog.removeAttribute('disabled')
-            const not = Notif('An error occurred updating permissions.', 'error_outline')
-            window.setTimeout(() => not.remove(), 2000)
+            Notif('An error occurred updating permissions.', 'error_outline', 4000)
             console.error(res)
             return
         }

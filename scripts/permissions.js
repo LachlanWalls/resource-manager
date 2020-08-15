@@ -1,6 +1,8 @@
-const { decode } = require('jsonwebtoken')
 
 const perms = require('./constants').PERMISSIONS
+const generatePermStructures = require('../public/home/scripts/permissions')
+module.exports = generatePermStructures(perms)
+
 
 const pad = (num, len, val = '0') => val.repeat(len - num.length) + String(num)
 const binToDec = val => parseInt(val, 2)
