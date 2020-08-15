@@ -1,15 +1,6 @@
 (async() => {
 
     window.dcache = {}
-    window.CONSTANTS = {
-        PERMISSIONS: [
-            'ADMIN',
-            'MANAGE_USERS',
-            'MANAGE_LOANS',
-            'MANAGE_TAGS',
-            'MANAGE_RESOURCES'
-        ]
-    }
 
     const token = localStorage.getItem('token')
     if (!token) return location.assign('/auth/login')
