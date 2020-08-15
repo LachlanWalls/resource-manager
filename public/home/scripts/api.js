@@ -1,5 +1,6 @@
 (() => {
 
+    // simple api object to wrap the native fetch function for our particular API, and automatically add authorization
     window.api = {
         req: async(url, method, body = {}) => {
             let pld = {method: method, headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}`, 'Content-Type': 'application/json'} }

@@ -1,5 +1,7 @@
 (() => {
 
+    // simple notification pop-up in the bottom right. used mainly for error messages
+
     window.Notif = (text, type, ar = -1) => {
         let elm = document.createElement('div')
         elm.className = 'notification'
