@@ -27,32 +27,8 @@
     cont.className = 'userspread'
     cont.innerHTML = `<span class='return'><i class='material-icons'>arrow_back</i>All Users</span><h5>${user.id}</h5><input type='text' value='${user.username}'><i class='status material-icons'>autorenew</i><br><h4>${user.reference}</h4>`
 
-    const pad = (num, len, val = '0') => val.repeat(len - num.length) + String(num)
-    const binToDec = val => parseInt(val, 2)
-    const decToBin = val => val.toString(2)
-    const decodeBitfield = dec => {
-        const bin = pad(decToBin(dec), CONSTANTS.PERMISSIONS.length)
-        let userperms = CONSTANTS.PERMISSIONS.filter((p, i) => bin.split('')[i] === '1')
-        return userperms
-    }
-    const encodeBitfield = userperms => {
-        let bfarr = CONSTANTS.PERMISSIONS.map(p => userperms.includes(p) ? '1':'0')
-        return binToDec(bfarr.join(''))
-    }
-    const checkPerm = (dec, p) => decodeBitfield(dec).includes(p)
-    const addPerm = (dec, p) => {
-        let userperms = decodeBitfield(dec)
-        if (userperms.indexOf(p) === -1) userperms.push(p)
-        return encodeBitfield(userperms)
-    }
-    const removePerm = (dec, p) => {
-        let userperms = decodeBitfield(dec)
-        if (userperms.indexOf(p) > -1) userperms.splice(userperms.indexOf(p), 1)
-        return encodeBitfield(userperms)
-    }
-
     const formatpermission = perm => perm.toLowerCase().split('_').map(p => p.substring(0, 1).toUpperCase() + p.substring(1)).join(' ')
-    cont.innerHTML += CONSTANTS.PERMISSIONS.map(p => `<div class='perm ${p}'><div class='toggle' ${checkPerm(user.permissions, p) ? 'checked':''}></div>${formatpermission(p)}</div>`).join('')
+    cont.innerHTML += CONSTANTS.PERMISSIONS.map(p => `<div class='perm ${p}'><div class='toggle' ${permissions.hasPerm(user.permissions, p) ? 'checked':''}></div>${formatpermission(p)}</div>`).join('')
 
     elm.appendChild(cont)
 
@@ -121,8 +97,8 @@
         let newpermissions = JSON.parse(JSON.stringify(user.permissions))
         let perm = tog.parentElement.className.replace('perm ', '')
         
-        if (tog.getAttribute('checked') === '') newpermissions = addPerm(newpermissions, perm)
-        else newpermissions = removePerm(newpermissions, perm)
+        if (tog.getAttribute('checked') === '') newpermissions = permissions.addPerm(newpermissions, perm)
+        else newpermissions = permissions.removePerm(newpermissions, perm)
 
         const res = await api.put(`/users/${user.id}`, { permissions: newpermissions })
 

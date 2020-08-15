@@ -1,5 +1,7 @@
 (() => {
 
+    // bitfield manipulation and verification
+
     function generatePermStructures(perms) {
         const pad = (num, len, val = '0') => val.repeat(len - num.length) + String(num)
         const binToDec = val => parseInt(val, 2)
@@ -22,6 +24,7 @@
             return encodeBitfield(userperms)
         }
         
+        const hasPerm = (dec, p) => decodeBitfield(dec).includes(p)
         const checkPerm = (dec, p) => decodeBitfield(dec).includes(p) || decodeBitfield(dec).includes('ADMIN')
         
         const addPerm = (dec, p) => {
@@ -40,12 +43,14 @@
             encodeBitfield,
             decodeBitfield,
             cleanBitfield,
+            hasPerm,
             checkPerm,
             addPerm,
             removePerm
         }
     }
 
+    // allow for usage of this file both client-side (native JS) and server-side (Node)
     if (typeof window !== 'undefined') window.permissions = generatePermStructures(window.CONSTANTS.PERMISSIONS)
     else module.exports = generatePermStructures
 
