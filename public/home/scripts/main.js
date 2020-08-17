@@ -15,6 +15,7 @@
 
     // update user nav drop-down to show user's name
     document.querySelector('.link.user').innerHTML = `${res.username}<i class="material-icons">expand_more</i>`
+    window.client = res
 
     // load up the current page
     Handler.go(location.pathname, false)

@@ -30,7 +30,38 @@
     const formatpermission = perm => perm.toLowerCase().split('_').map(p => p.substring(0, 1).toUpperCase() + p.substring(1)).join(' ')
     cont.innerHTML += CONSTANTS.PERMISSIONS.map(p => `<div class='perm ${p}'><div class='toggle' ${permissions.hasPerm(user.permissions, p) ? 'checked':''}></div>${formatpermission(p)}</div>`).join('')
 
+    const userperms = permissions.decodeBitfield(client.permissions)
+    const canChangePassword = (userperms.includes('ADMIN') || client.id === user.id)
+    if (canChangePassword) cont.innerHTML += '<button class="changepswd">Change Password</button>'
+
     elm.appendChild(cont)
+
+    if (canChangePassword) {
+        document.querySelector('.changepswd').addEventListener('click', () => {
+            let d = new Dialog('input', {
+                title: 'Change Password',
+                description: `Change ${user.username}'s password.`,
+                placeholder: 'New Password',
+                inputtype: 'password'
+            })
+            d.on('complete', async dat => {
+                let not = Notif('Updating password...', 'autorenew')
+                const res = await api.put(`/users/${user.id}`, { password: dat.value })
+                
+                if (!res.err) {
+                    not.setText('Password updated successfully')
+                    not.setType('check')
+                    window.setTimeout(() => not.remove(), 4000)
+                } else {
+                    console.error(res)
+                    not.setText('An error occurred updating the password')
+                    not.setType('error_outline')
+                    window.setTimeout(() => not.remove(), 4000)
+                }
+            })
+            d.show()
+        })
+    }
 
     cont.querySelector('input').addEventListener('input', () => {
         let newusername = cont.querySelector('input')

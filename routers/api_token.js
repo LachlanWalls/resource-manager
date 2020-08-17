@@ -19,7 +19,7 @@ module.exports = {
                 if (err) return res.send({"err": "invalid-token"})
 
                 if (decoded.sub === 'admin') {
-                    let payload = { id: decoded.sub, username: 'admin', reference: 'admin', permissions: ['ADMIN'] }
+                    let payload = { id: decoded.sub, username: 'admin', reference: 'admin', permissions: 16 }
                     if (decoded.exp - (60*60*24*7) < Date.now() / 1000) payload.refresh = true
                     return res.send(payload)
                 }
