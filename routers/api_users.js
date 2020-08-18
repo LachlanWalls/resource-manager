@@ -78,6 +78,15 @@ module.exports = {
             if (req.body.password && !canChangePassword) return res.send({"err": "insufficient-permissions"})
             if ((req.body.permissions || req.body.permissions === 0) && !canChangePermissions) return res.send({"err": "insufficient-permissions"})
 
+            if (req.body.password && !permissions.checkPerm(requser.permissions, 'ADMIN')) {
+                if (!req.body.current_password) return res.send({"err": "missing-current_password"})
+
+                const myuser = await db.query('SELECT password FROM users WHERE id = ?', [targetuser.id])
+                if (myuser.length === 0) return res.send({"err": "internal-server-error"})
+
+                if (!bcrypt.compareSync(req.body.current_password, myuser[0].password)) return res.send({"err": "incorrect-credentials"})
+            }
+
             if (req.body.username) {
                 const newusername = req.body.username
                 const newreference = newusername.replace(/[^0-9A-Za-z-]/g, '-').toLowerCase()
