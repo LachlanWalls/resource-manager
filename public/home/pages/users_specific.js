@@ -27,8 +27,10 @@
     cont.className = 'userspread'
     cont.innerHTML = `<span class='return'><i class='material-icons'>arrow_back</i>All Users</span><h5>${user.id}</h5><input type='text' value='${user.username}'><i class='status material-icons'>autorenew</i><br><h4>${user.reference}</h4>`
 
-    const formatpermission = perm => perm.toLowerCase().split('_').map(p => p.substring(0, 1).toUpperCase() + p.substring(1)).join(' ')
-    cont.innerHTML += CONSTANTS.PERMISSIONS.map(p => `<div class='perm ${p}'><div class='toggle' ${permissions.hasPerm(user.permissions, p) ? 'checked':''}></div>${formatpermission(p)}</div>`).join('')
+    if (permissions.hasPerm(client.permissions, 'ADMIN')) {
+        const formatpermission = perm => perm.toLowerCase().split('_').map(p => p.substring(0, 1).toUpperCase() + p.substring(1)).join(' ')
+        cont.innerHTML += CONSTANTS.PERMISSIONS.map(p => `<div class='perm ${p}'><div class='toggle' ${permissions.hasPerm(user.permissions, p) ? 'checked':''}></div>${formatpermission(p)}</div>`).join('')
+    }
 
     const userperms = permissions.decodeBitfield(client.permissions)
     const canChangePassword = (userperms.includes('ADMIN') || client.id === user.id)
@@ -38,15 +40,24 @@
 
     if (canChangePassword) {
         document.querySelector('.changepswd').addEventListener('click', () => {
+            let inputs = [{
+                placeholder: 'New Password',
+                type: 'password'
+            }]
+
+            if (client.id === user.id && !userperms.includes('ADMIN')) inputs = [{ placeholder: 'Current Password', type: 'password' }, inputs[0]]
+
             let d = new Dialog('input', {
                 title: 'Change Password',
                 description: `Change ${user.username}'s password.`,
-                placeholder: 'New Password',
-                inputtype: 'password'
+                inputs: inputs
             })
+
             d.on('complete', async dat => {
                 let not = Notif('Updating password...', 'autorenew')
-                const res = await api.put(`/users/${user.id}`, { password: dat.value })
+
+                let payload = (dat.values.length === 1) ? { password: dat.values[0] } : { current_password: dat.values[0], password: dat.values[1] }
+                const res = await api.put(`/users/${user.id}`, payload)
                 
                 if (!res.err) {
                     not.setText('Password updated successfully')
@@ -59,6 +70,7 @@
                     window.setTimeout(() => not.remove(), 4000)
                 }
             })
+
             d.show()
         })
     }

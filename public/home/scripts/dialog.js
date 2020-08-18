@@ -15,17 +15,24 @@
         }
         render() {
             if (this.type === 'input') {
+                this.elm.querySelectorAll('input').forEach(inp => inp.parentElement.removeChild(inp))
+
                 this.elm.querySelector('h3').innerText = this.data.title
                 this.elm.querySelector('p').innerText = this.data.description
-                this.elm.querySelector('input').setAttribute('placeholder', this.data.placeholder || '')
-                this.elm.querySelector('input').value = this.data.value || ''
-                this.elm.querySelector('input').setAttribute('type', this.data.inputtype || 'text')
                 this.elm.querySelector('button').innerText = this.data.button || 'SUBMIT'
 
                 clearListeners(this.elm.querySelector('button'))
                 this.elm.querySelector('button').addEventListener('click', () => {
                     this.dismiss(false)
-                    this.callback('complete', { value: this.elm.querySelector('input').value })
+                    this.callback('complete', { values: Array.prototype.slice.call(this.elm.querySelectorAll('input')).map(el => el.value) })
+                })
+
+                this.data.inputs.forEach(indat => {
+                    let inp = document.createElement('input')
+                    inp.value = indat.value || ''
+                    inp.type = indat.type || 'text'
+                    inp.placeholder = indat.placeholder || ''
+                    this.elm.insertBefore(inp, this.elm.querySelector('button'))
                 })
             }
 

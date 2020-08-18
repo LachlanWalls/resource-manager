@@ -27,7 +27,7 @@ module.exports = {
                 const users = await db.query('SELECT * FROM users WHERE id = ?', [decoded.sub])
                 if (users.length === 0) return res.send({"err": "invalid-token"})
 
-                let payload = { id: decoded.sub, username: users[0].username, reference: users[0].reference }
+                let payload = { id: decoded.sub, username: users[0].username, reference: users[0].reference, permissions: users[0].permissions }
                 if (decoded.exp - (60*60*24*7) < Date.now() / 1000) payload.refresh = true
                 return res.send(payload)
             })
