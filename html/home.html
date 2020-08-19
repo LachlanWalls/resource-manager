@@ -18,11 +18,11 @@
         <div class="links">
             <a class="link" href="/resources" onclick="return Handler.ago(this.href);">Resources</a>
             <a class="link" href="/loans" onclick="return Handler.ago(this.href);">Loans</a>
-            <a class="link" href="/users" onclick="return Handler.ago(this.href);">Users</a>
+            <a class="link users" href="/users" onclick="return Handler.ago(this.href);">Users</a>
             <a class="link user" href="/account" onclick="return Handler.ago(this.href);"></a>
             <div class="usermenu">
                 <a class="link account" href="/account" onclick="return Handler.ago(this.href);">Account</a>
-                <a class="link" href="/admin" onclick="return Handler.ago(this.href);">Admin</a>
+                <a class="link admin" href="/admin" onclick="return Handler.ago(this.href);">Admin</a>
                 <a class="link" onclick="localStorage.removeItem('token'); location.assign('/auth/login');">Logout</a>
             </div>
         </div>
@@ -50,6 +50,7 @@
 
     <script src="/home/scripts/notif.js"></script>
     <script src="/home/scripts/dialog.js"></script>
+    <script src="/home/scripts/nav.js"></script>
 
     <script src="/home/scripts/api.js"></script>
     <script src="/home/scripts/handler.js"></script>

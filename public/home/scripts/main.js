@@ -14,9 +14,8 @@
     if (res.err) return location.assign('/auth/login')
 
     // update user nav drop-down to show user's name
-    document.querySelector('.link.user').innerHTML = `${res.username}<i class="material-icons">expand_more</i>`
-    document.querySelector('.usermenu>.link.account').href = `/users/${res.reference}`
     window.client = res
+    window.loadNav()
 
     // load up the current page
     Handler.go(location.pathname, false)
