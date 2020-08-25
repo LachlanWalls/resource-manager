@@ -20,9 +20,9 @@ module.exports = {
         async function processResource(resource) {
             let tags = await db.query('SELECT * FROM tags')
             resource.type = ['singular', 'instanced'][resource.type]
-            if (resource.type === 'instanced') resource.instances = await db.query('SELECT * FROM resource_instances WHERE resource = ?', [resource.id])
-            for (let inst of resource.instances) {
-                inst.attachments = await db.query('SELECT * FROM resource_attachments WHERE res_id = ?', [inst.id])
+            if (resource.type === 'instanced') {
+                resource.instances = await db.query('SELECT * FROM resource_instances WHERE resource = ?', [resource.id])
+                for (let inst of resource.instances) inst.attachments = await db.query('SELECT * FROM resource_attachments WHERE res_id = ?', [inst.id])
             }
             resource.attachments = await db.query('SELECT * FROM resource_attachments WHERE res_id = ?', [resource.id])
             let rtags = await db.query('SELECT * FROM resource_tags WHERE res_id = ?', [resource.id])
