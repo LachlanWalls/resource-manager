@@ -37,22 +37,23 @@
     let cont = document.createElement('div')
     cont.className = 'instancespread'
     cont.innerHTML = `<span class='return'><i class='material-icons'>arrow_back</i>${resource.name}</span>${img}<h4 class='type'>${instance.id} • ${atts}</h4><p class='desc'>${desc}</p>`
-    /*if (canedit) cont.innerHTML += `<button style='margin-top: 18px;' class='edit'>EDIT INSTANCE</button><button style='margin-left: 18px; background-color: #b30202;' class='delete'>DELETE INSTANCE</button>`
+    if (canedit) cont.innerHTML += `<button style='margin-top: 18px;' class='edit'>EDIT INSTANCE</button><button style='margin-left: 18px; background-color: #b30202;' class='delete'>DELETE INSTANCE</button>`
 
     if (canedit) {
         cont.querySelector('button.edit').addEventListener('click', () => {
             let d = new Dialog('input', {
-                title: 'Edit Resource',
-                description: `Edit ${resource.name}`,
+                title: 'Edit Instance',
+                description: `Edit instance ${instance.id} for ${resource.name}`,
                 inputs: [{
-                    placeholder: 'New Description',
-                    value: resource.description
+                    placeholder: 'Description',
+                    value: instance.description,
+                    required: true
                 }]
             })
 
             d.on('complete', async dat => {
                 let not = Notif('Updating description...', 'autorenew')
-                const res = await api.put(`/resources/${resource.id}`, { description: dat.values[0] })
+                const res = await api.put(`/resources/${resource.id}/instances/${instance.id}`, { description: dat.values[0] })
                 
                 if (!res.err) {
                     not.setText('Description updated successfully')
@@ -73,26 +74,26 @@
 
         cont.querySelector('button.delete').addEventListener('click', () => {
             let d = new Dialog('input', {
-                title: 'Delete Resource',
-                description: `Are you sure you want to delete ${resource.name}? This action cannot be undone!`,
+                title: 'Delete Instance',
+                description: `Are you sure you want to delete ${instance.id} from ${resource.name}? This action cannot be undone!`,
                 button: 'DELETE',
                 buttonbg: '#b30202',
                 inputs: []
             })
 
-            d.on('complete', async dat => {
+            d.on('complete', async() => {
                 let not = Notif('Deleting...', 'autorenew')
-                const res = await api.delete(`/resources/${resource.id}`)
+                const res = await api.delete(`/resources/${resource.id}/instances/${instance.id}`)
                 
                 if (!res.err) {
-                    Handler.go('/resources')
-                    not.setText('Resource deleted')
+                    Handler.go(`/resources/${resource.id}`)
+                    not.setText('Instance deleted')
                     not.setType('check')
                     window.setTimeout(() => not.remove(), 4000)
-                    dcache.resources.splice(dcache.resources.indexOf(resource), 1)
+                    dcache.resources.find(r => r.id === resource.id).instances.splice(dcache.resources.find(r => r.id === resource.id).instances.indexOf(instance), 1)
                 } else {
                     console.error(res)
-                    not.setText('An error occurred deleting this resource')
+                    not.setText('An error occurred deleting this instance')
                     not.setType('error_outline')
                     window.setTimeout(() => not.remove(), 4000)
                 }
@@ -100,7 +101,7 @@
 
             d.show()
         })
-    }*/
+    }
 
     elm.appendChild(cont)
 
@@ -113,7 +114,7 @@
     }
 
     document.querySelectorAll('.attachment').forEach(el => el.addEventListener('click', e => Handler.go(`/resources/${resource.id}/instances/${instance.id}/attachments/${e.target.id}`)))
-    
+
     document.querySelector('span.return').addEventListener('click', () => Handler.go('/resources/' + resource.id))
 
     window.dispatchEvent(new Event('SPAloaded'))

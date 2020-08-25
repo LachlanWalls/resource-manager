@@ -49,6 +49,7 @@
                 if (!res.err) {
                     window.setTimeout(() => {
                         not.remove()
+                        dcache.resources = {}
                         Handler.go('/resources/' + res.id)
                     }, 10)
                 } else {

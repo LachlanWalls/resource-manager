@@ -161,14 +161,43 @@
 
     let instcont = document.createElement('div')
     instcont.className = 'resource-instances'
-    instcont.innerHTML = '<h3>Instances</h3>'
-    instcont.innerHTML += resource.instances.map(inst => `<div class='instance' id='${inst.id}'>${inst.description}${inst.attachments.length > 0 ? `<br><span>${inst.attachments.length} attachments</span>`:''}</div>`).join('') || '[no instances]'
+    instcont.innerHTML = '<h3>Instances</h3><i class="material-icons">add</i>'
+    instcont.innerHTML += resource.instances.map(inst => `<div class='instance' id='${inst.id}'>${inst.description || '[no description]'}</div>`).join('') || '[no instances]'
     elm.appendChild(instcont)
+
+    document.querySelector('.resource-instances>i').addEventListener('click', () => {
+        let d = new Dialog('input', {
+            title: 'Create Instance',
+            description: `Create new instance for ${resource.name}`,
+            button: 'CREATE',
+            inputs: [{ placeholder: 'Description' }]
+        })
+
+        d.on('complete', async dat => {
+            let not = Notif('Creating...', 'autorenew')
+            const res = await api.post(`/resources/${resource.id}/instances`, { description: dat.values[1] })
+            
+            if (!res.err) {
+                window.setTimeout(() => {
+                    not.remove()
+                    dcache.resources.splice(dcache.resources.findIndex(r => r.id === resource.id), 1)
+                    Handler.go('/resources/' + resource.id + '/instances/' + res.id)
+                }, 10)
+            } else {
+                console.error(res)
+                not.setText('An error occurred creating this instance')
+                not.setType('error_outline')
+                window.setTimeout(() => not.remove(), 4000)
+            }
+        })
+
+        d.show()
+    })
 
     if (resource.attachments.length > 0) {
         let attcont = document.createElement('div')
         attcont.className = 'resource-attachments'
-        attcont.innerHTML = '<h3>Attachments</h3>'
+        attcont.innerHTML = '<h3>Attachments</h3><i class="material-icons">add</i>'
         attcont.innerHTML += resource.attachments.map(att => `<img class='attachment' id='${att.id}' src='${att.url}'>`).join('')
         elm.appendChild(attcont)
     }

@@ -88,8 +88,8 @@ module.exports = {
                 await db.query('UPDATE resources SET description = ? WHERE id = ?', [req.body.description, resource.id])
             }
 
-            resource = await db.query('SELECT * FROM resources WHERE id = ?', [req.params.resource])
-            return res.send(resource[0])
+            resource = await getAndProcessResource(resource.id)
+            return res.send(resource)
         })
 
         router.delete('/:resource', async(req, res) => {
@@ -99,6 +99,51 @@ module.exports = {
             if (!resource) return res.status(404).send({"err": "unknown-resource"})
 
             await db.query('DELETE FROM resources WHERE id = ?', [req.params.resource])
+
+            return res.status(204).send()
+        })
+
+        router.post('/:resource/instances', async(req, res) => {
+            let resource = await getAndProcessResource(req.params.resource)
+            if (!resource) return res.status(404).send({"err": "unknown-resource"})
+            if (resource.type !== 'instanced') return res.send({"err": "invalid-resource-type"})
+
+            const gr = () => Math.floor(Math.random() * 10)
+            const id = `I-${gr()}${gr()}${gr()}${gr()}-${gr()}${gr()}${gr()}${gr()}-${gr()}${gr()}${gr()}${gr()}`
+            const desc = req.body.description || null
+
+            await db.query('INSERT INTO resource_instances (`id`, `resource`, `description`) VALUES (?, ?, ?)', [id, resource.id, desc])
+
+            return res.send({
+                "id": id,
+                "resource": resource.id,
+                "description": desc
+            })
+        })
+
+        router.put('/:resource/instances/:instance', async(req, res) => {
+            let resource = await getAndProcessResource(req.params.resource)
+            if (!resource) return res.status(404).send({"err": "unknown-resource"})
+
+            let instance = resource.instances.find(inst => inst.id === req.params.instance)
+            if (!instance) return res.status(404).send({"err": "unknown-instance"})
+
+            if (req.body.description) {
+                await db.query('UPDATE resource_instances SET description = ? WHERE id = ?', [req.body.description, instance.id])
+                instance.description = req.body.description
+            }
+
+            return res.send(instance)
+        })
+
+        router.delete('/:resource/instances/:instance', async(req, res) => {
+            let resource = await getAndProcessResource(req.params.resource)
+            if (!resource) return res.status(404).send({"err": "unknown-resource"})
+
+            let instance = resource.instances.find(inst => inst.id === req.params.instance)
+            if (!instance) return res.status(404).send({"err": "unknown-instance"})
+
+            await db.query('DELETE FROM resource_instances WHERE id = ?', [instance.id])
 
             return res.status(204).send()
         })

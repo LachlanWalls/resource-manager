@@ -644,9 +644,17 @@ table td {
   font-weight: bold;
 }
 
+.resource-instances i {
+  position: absolute;
+  top: 36px;
+  right: 32px;
+  cursor: pointer;
+}
+
 .resource-instances .instance {
   width: 220px;
-  height: 80px;
+  opacity: 0.8;
+  max-height: 70px;
   padding: 10px;
   border: 1px solid #e6e6e6;
   border-radius: 8px;
@@ -654,6 +662,7 @@ table td {
   vertical-align: top;
   margin: 0 12px 0 0;
   cursor: pointer;
+  height: auto;
   overflow: hidden;
   white-space: normal;
 }
@@ -682,6 +691,13 @@ table td {
   opacity: 1;
   margin-bottom: 24px;
   font-weight: bold;
+}
+
+.resource-attachments i {
+  position: absolute;
+  top: 36px;
+  right: 32px;
+  cursor: pointer;
 }
 
 .resource-attachments .attachment {
