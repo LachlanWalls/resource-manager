@@ -159,6 +159,22 @@
 
     elm.appendChild(cont)
 
+    let instcont = document.createElement('div')
+    instcont.className = 'resource-instances'
+    instcont.innerHTML = '<h3>Instances</h3>'
+    instcont.innerHTML += resource.instances.map(inst => `<div class='instance' id='${inst.id}'>${inst.description}${inst.attachments.length > 0 ? `<br><span>${inst.attachments.length} attachments</span>`:''}</div>`).join('') || '[no instances]'
+    elm.appendChild(instcont)
+
+    if (resource.attachments.length > 0) {
+        let attcont = document.createElement('div')
+        attcont.className = 'resource-attachments'
+        attcont.innerHTML = '<h3>Attachments</h3>'
+        attcont.innerHTML += resource.attachments.map(att => `<img class='attachment' id='${att.id}' src='${att.url}'>`).join('')
+        elm.appendChild(attcont)
+    }
+
+    document.querySelectorAll('.instance').forEach(el => el.addEventListener('click', e => Handler.go(`/resources/${resource.id}/instances/${e.target.id}`)))
+    document.querySelectorAll('.attachment').forEach(el => el.addEventListener('click', e => Handler.go(`/resources/${resource.id}/attachments/${e.target.id}`)))
 
     document.querySelector('span.return').addEventListener('click', () => Handler.go('/resources'))
 

@@ -9,18 +9,36 @@ module.exports = {
 
         const router = express.Router()
 
+        async function getResource(identifier) {
+            let res = await db.query('SELECT * FROM resources WHERE id = ?', [identifier])
+            if (res.length > 0) return res[0]
+            res = await db.query('SELECT * FROM resources WHERE reference = ?', [identifier])
+            if (res.length > 0) return res[0]
+            return null
+        }
+
+        async function processResource(resource) {
+            let tags = await db.query('SELECT * FROM tags')
+            resource.type = ['singular', 'instanced'][resource.type]
+            if (resource.type === 'instanced') resource.instances = await db.query('SELECT * FROM resource_instances WHERE resource = ?', [resource.id])
+            for (let inst of resource.instances) {
+                inst.attachments = await db.query('SELECT * FROM resource_attachments WHERE res_id = ?', [inst.id])
+            }
+            resource.attachments = await db.query('SELECT * FROM resource_attachments WHERE res_id = ?', [resource.id])
+            let rtags = await db.query('SELECT * FROM resource_tags WHERE res_id = ?', [resource.id])
+            resource.tags = rtags.map(t => tags.find(tg => tg.id === (t.tag_id || 'NONE')) || { "name": t.tag_id, "reference": t.tag_id, "description": "" })
+            return resource
+        }
+
+        async function getAndProcessResource(identifier) {
+            let res = await getResource(identifier)
+            if (!res) return null
+            let proc = await processResource(res)
+            return proc
+        }
+
         router.get('/', async(req, res) => {
             let resources = await db.query('SELECT * FROM resources')
-            let tags = await db.query('SELECT * FROM tags')
-
-            const processResource = async(resource) => {
-                resource.type = ['singular', 'instanced'][resource.type]
-                if (resource.type === 'instanced') resource.instances = await db.query('SELECT * FROM resource_instances WHERE resource = ?', [resource.id])
-                resource.attachments = await db.query('SELECT * FROM resource_attachments WHERE res_id = ?', [resource.id])
-                let rtags = await db.query('SELECT * FROM resource_tags WHERE res_id = ?', [resource.id])
-                resource.tags = rtags.map(t => tags.find(tg => tg.id === (t.tag_id || 'NONE')) || { "name": t.tag_id, "reference": t.tag_id, "description": "" })
-            }
-
             await Promise.all(resources.map(res => processResource(res)))
             return res.send(resources)
         })
@@ -49,23 +67,14 @@ module.exports = {
         })
 
         router.get('/:resource', async(req, res) => {
-            let resource = await db.query('SELECT * FROM resources WHERE id = ?', [req.params.resource])
-            if (resource.length === 0) return res.status(404).send({"err": "unknown-resource"})
-            resource = resource[0]
-
-            resource.type = ['singular', 'instanced'][resource.type]
-            if (resource.type === 'instanced') resource.instances = await db.query('SELECT * FROM resource_instances WHERE resource = ?', [resource.id])
-            resource.attachments = await db.query('SELECT * FROM resource_attachments WHERE res_id = ?', [resource.id])
-            let rtags = await db.query('SELECT * FROM resource_tags WHERE res_id = ?', [resource.id])
-            resource.tags = rtags.map(t => tags.find(tg => tg.id === (t.tag_id || 'NONE')) || { "name": t.tag_id, "reference": t.tag_id, "description": "" })
-
+            let resource = await getAndProcessResource(req.params.resource)
+            if (!resource) return res.status(404).send({"err": "unknown-resource"})
             return res.send(resource)
         })
 
         router.put('/:resource', async(req, res) => {
-            let resource = await db.query('SELECT * FROM resources WHERE id = ?', [req.params.resource])
-            if (resource.length === 0) return res.status(404).send({"err": "unknown-resource"})
-            resource = resource[0]
+            let resource = await getAndProcessResource(req.params.resource)
+            if (!resource) return res.status(404).send({"err": "unknown-resource"})
 
             if (req.body.name) {
                 const newname = req.body.name
@@ -86,8 +95,8 @@ module.exports = {
         router.delete('/:resource', async(req, res) => {
             if (req.params.resource === 'R-1234-5678-9012') return res.status(204).send()
 
-            let resource = await db.query('SELECT * FROM resources WHERE id = ?', [req.params.resource])
-            if (resource.length === 0) return res.status(404).send({"err": "unknown-resource"})
+            let resource = await getAndProcessResource(req.params.resource)
+            if (!resource) return res.status(404).send({"err": "unknown-resource"})
 
             await db.query('DELETE FROM resources WHERE id = ?', [req.params.resource])
 
