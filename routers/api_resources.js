@@ -44,6 +44,9 @@ module.exports = {
         })
 
         router.post('/', async(req, res) => {
+            const permres = await utils.userFromHeaderHasPerm(db, req.headers.authorization, 'MANAGE_RESOURCES')
+            if (permres.err) return res.send(permres)
+
             if (!req.body.name) return res.send({"err": "missing-name"})
             if (!['instanced', 'singular'].includes(req.body.type)) return res.send({"err": "missing-type"})
 
@@ -73,6 +76,9 @@ module.exports = {
         })
 
         router.put('/:resource', async(req, res) => {
+            const permres = await utils.userFromHeaderHasPerm(db, req.headers.authorization, 'MANAGE_RESOURCES')
+            if (permres.err) return res.send(permres)
+
             let resource = await getAndProcessResource(req.params.resource)
             if (!resource) return res.status(404).send({"err": "unknown-resource"})
 
@@ -93,6 +99,9 @@ module.exports = {
         })
 
         router.delete('/:resource', async(req, res) => {
+            const permres = await utils.userFromHeaderHasPerm(db, req.headers.authorization, 'MANAGE_RESOURCES')
+            if (permres.err) return res.send(permres)
+
             if (req.params.resource === 'R-1234-5678-9012') return res.status(204).send()
 
             let resource = await getAndProcessResource(req.params.resource)
@@ -104,6 +113,9 @@ module.exports = {
         })
 
         router.post('/:resource/instances', async(req, res) => {
+            const permres = await utils.userFromHeaderHasPerm(db, req.headers.authorization, 'MANAGE_RESOURCES')
+            if (permres.err) return res.send(permres)
+
             let resource = await getAndProcessResource(req.params.resource)
             if (!resource) return res.status(404).send({"err": "unknown-resource"})
             if (resource.type !== 'instanced') return res.send({"err": "invalid-resource-type"})
@@ -122,6 +134,9 @@ module.exports = {
         })
 
         router.put('/:resource/instances/:instance', async(req, res) => {
+            const permres = await utils.userFromHeaderHasPerm(db, req.headers.authorization, 'MANAGE_RESOURCES')
+            if (permres.err) return res.send(permres)
+
             let resource = await getAndProcessResource(req.params.resource)
             if (!resource) return res.status(404).send({"err": "unknown-resource"})
 
@@ -137,6 +152,9 @@ module.exports = {
         })
 
         router.delete('/:resource/instances/:instance', async(req, res) => {
+            const permres = await utils.userFromHeaderHasPerm(db, req.headers.authorization, 'MANAGE_RESOURCES')
+            if (permres.err) return res.send(permres)
+
             let resource = await getAndProcessResource(req.params.resource)
             if (!resource) return res.status(404).send({"err": "unknown-resource"})
 
