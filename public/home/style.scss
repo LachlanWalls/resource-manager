@@ -642,6 +642,77 @@ table {
     }
 }
 
+.instancespread {
+    width: calc(100vw - 160px);
+    margin: 0 auto;
+    max-width: 800px;
+    padding: 40px;
+    position: relative;
+
+    background-color: white;
+    border-radius: 8px;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.05));
+
+    span.return {
+        cursor: pointer;
+
+        i {
+            vertical-align: middle;
+            margin-right: 8px;
+            transform: translateY(-2px);
+            font-size: 20px;
+            transition: transform .2s;
+        }
+
+        &:hover {
+            text-decoration: underline;
+
+            i {
+                transform: translateX(-4px) translateY(-2px);
+            }
+        }
+    }
+
+    img {
+        width: 280px;
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        border-radius: 4px;
+        filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.1));
+    }
+
+    h5 {
+        margin: 0;
+        opacity: 0.8;
+        margin-top: 24px;
+    }
+
+    h4 {
+        margin: 0;
+        font-weight: bold;
+        font-size: 14px;
+        opacity: 0.8;
+        margin-bottom: 28px;
+        margin-top: 18px;
+
+        &.ref {
+            margin-bottom: 8px;
+        }
+    }
+
+    button {
+        padding: 8px 12px;
+        background: #5093ad;
+        border-radius: 4px;
+        margin-top: 18px;
+        color: white;
+        border: none;
+        font-weight: bold;
+        cursor: pointer;
+    }
+}
+
 #notifications {
     position: absolute;
     bottom: 40px;

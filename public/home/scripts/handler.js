@@ -58,6 +58,7 @@
             '^\/users\/U-[0-9]{4}-[0-9]{4}-[0-9]{4}$': '/home/pages/users_specific.js',
             '^\/resources$': '/home/pages/resources.js',
             '^\/resources\/R-[0-9]{4}-[0-9]{4}-[0-9]{4}$': '/home/pages/resources_specific.js',
+            '^\/resources\/R-[0-9]{4}-[0-9]{4}-[0-9]{4}\/instances\/I-[0-9]{4}-[0-9]{4}-[0-9]{4}$': '/home/pages/instances_specific.js',
             '^.+$': '/home/pages/404.js'
         }
     }
