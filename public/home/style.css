@@ -386,6 +386,242 @@ table td {
   cursor: pointer;
 }
 
+.resource {
+  width: 240px;
+  padding: 20px;
+  height: auto;
+  display: inline-block;
+  margin: 20px;
+  vertical-align: middle;
+  background-color: white;
+  border-radius: 8px;
+  -webkit-filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+          filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+  -webkit-transition: -webkit-transform .2s, -webkit-filter .2s;
+  transition: -webkit-transform .2s, -webkit-filter .2s;
+  transition: transform .2s, filter .2s;
+  transition: transform .2s, filter .2s, -webkit-transform .2s, -webkit-filter .2s;
+  cursor: pointer;
+}
+
+.resource:hover {
+  -webkit-transform: translateY(-2px);
+          transform: translateY(-2px);
+  -webkit-filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+          filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+.resource img {
+  position: relative;
+  width: 280px;
+  top: -20px;
+  left: -20px;
+  border-radius: 8px 8px 0 0;
+}
+
+.resource h5 {
+  margin: 0;
+  opacity: 0.8;
+}
+
+.resource h1 {
+  font-weight: bold;
+  margin: 12px 0 4px 0;
+}
+
+.resource p.inf {
+  margin-top: 0;
+  font-size: 14px;
+  opacity: 0.6;
+}
+
+.resource p.desc {
+  margin-top: 24px;
+}
+
+.resource .tags div {
+  display: inline-block;
+  vertical-align: middle;
+  padding: 2px 8px 3px 8px;
+  border-radius: 24px;
+  color: white;
+  background-color: #5093ad;
+  font-size: 13px;
+  font-weight: bold;
+  margin-right: 4px;
+  cursor: pointer;
+  -webkit-filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.1));
+          filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.1));
+}
+
+.add {
+  width: 24px;
+  height: 24px;
+  background-color: white;
+  border-radius: 24px;
+  display: inline-block;
+  vertical-align: middle;
+  padding: 12px;
+  -webkit-filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+          filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+  cursor: pointer;
+  margin-left: 18px;
+  -webkit-transition: -webkit-filter .2s;
+  transition: -webkit-filter .2s;
+  transition: filter .2s;
+  transition: filter .2s, -webkit-filter .2s;
+}
+
+.add:hover {
+  -webkit-filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+          filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+.resourcespread {
+  width: calc(100vw - 160px);
+  margin: 0 auto;
+  max-width: 800px;
+  padding: 40px;
+  position: relative;
+  background-color: white;
+  border-radius: 8px;
+  -webkit-filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.05));
+          filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.05));
+}
+
+.resourcespread span.return {
+  cursor: pointer;
+}
+
+.resourcespread span.return i {
+  vertical-align: middle;
+  margin-right: 8px;
+  -webkit-transform: translateY(-2px);
+          transform: translateY(-2px);
+  font-size: 20px;
+  -webkit-transition: -webkit-transform .2s;
+  transition: -webkit-transform .2s;
+  transition: transform .2s;
+  transition: transform .2s, -webkit-transform .2s;
+}
+
+.resourcespread span.return:hover {
+  text-decoration: underline;
+}
+
+.resourcespread span.return:hover i {
+  -webkit-transform: translateX(-4px) translateY(-2px);
+          transform: translateX(-4px) translateY(-2px);
+}
+
+.resourcespread img {
+  width: 280px;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  border-radius: 4px;
+  -webkit-filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.1));
+          filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.1));
+}
+
+.resourcespread h5 {
+  margin: 0;
+  opacity: 0.8;
+  margin-top: 24px;
+}
+
+.resourcespread input {
+  font-size: 26px;
+  padding: 12px;
+  margin: 24px 0 8px 0;
+  -webkit-transform: translateX(-2px);
+          transform: translateX(-2px);
+  border-radius: 8px;
+  border: none;
+  background-color: whitesmoke;
+  border: 2px solid white;
+}
+
+.resourcespread input:focus {
+  outline: none;
+}
+
+.resourcespread input:focus:not([readonly]) {
+  border-color: rgba(117, 117, 140, 0.4);
+}
+
+.resourcespread input[error] {
+  border-color: rgba(146, 0, 0, 0.4);
+}
+
+.resourcespread input[disabled] {
+  opacity: 0.6;
+}
+
+.resourcespread i.status {
+  margin-left: -30px;
+  -webkit-transition: margin-left .2s;
+  transition: margin-left .2s;
+}
+
+.resourcespread i.status[enabled] {
+  margin-left: 8px;
+}
+
+@keyframes spin {
+  from {
+    -webkit-transform: rotate(0deg);
+            transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+            transform: rotate(360deg);
+  }
+}
+
+.resourcespread i.status[loading] {
+  -webkit-animation: spin 1.5s linear infinite;
+          animation: spin 1.5s linear infinite;
+}
+
+.resourcespread h4 {
+  margin: 0;
+  font-weight: bold;
+  font-size: 14px;
+  opacity: 0.8;
+  margin-bottom: 28px;
+}
+
+.resourcespread h4.ref {
+  margin-bottom: 8px;
+}
+
+.resourcespread button {
+  padding: 8px 12px;
+  background: #5093ad;
+  border-radius: 4px;
+  margin-top: 18px;
+  color: white;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.resourcespread .tags div {
+  display: inline-block;
+  vertical-align: middle;
+  padding: 2px 8px 3px 8px;
+  border-radius: 24px;
+  color: white;
+  background-color: #5093ad;
+  font-size: 13px;
+  font-weight: bold;
+  margin-right: 4px;
+  cursor: pointer;
+  -webkit-filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.1));
+          filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.1));
+}
+
 #notifications {
   position: absolute;
   bottom: 40px;
@@ -463,7 +699,7 @@ table td {
   opacity: 0.8;
 }
 
-#dialogs .dialog input {
+#dialogs .dialog input[type=text], #dialogs .dialog input[type=password] {
   width: 244px;
   margin: 0 70px;
   padding: 8px;
@@ -483,4 +719,8 @@ table td {
   border: none;
   font-weight: bold;
   cursor: pointer;
+}
+
+#dialogs .dialog .other {
+  text-align: center;
 }

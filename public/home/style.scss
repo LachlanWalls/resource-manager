@@ -341,6 +341,223 @@ table {
     }
 }
 
+.resource {
+    width: 240px;
+    padding: 20px;
+    height: auto;
+    display: inline-block;
+    margin: 20px;
+    vertical-align: middle;
+
+    background-color: white;
+    border-radius: 8px;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+    transition: transform .2s, filter .2s;
+    cursor: pointer;
+
+    &:hover {
+        transform: translateY(-2px);
+        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+    }
+
+    img {
+        position: relative;
+        width: 280px;
+        top: -20px;
+        left: -20px;
+        border-radius: 8px 8px 0 0;
+    }
+
+    h5 {
+        margin: 0;
+        opacity: 0.8;
+    }
+
+    h1 {
+        font-weight: bold;
+        margin: 12px 0 4px 0;
+    }
+
+    p.inf {
+        margin-top: 0;
+        font-size: 14px;
+        opacity: 0.6;
+    }
+
+    p.desc {
+        margin-top: 24px;
+    }
+
+    .tags {
+        div {
+            display: inline-block;
+            vertical-align: middle;
+            padding: 2px 8px 3px 8px;
+            border-radius: 24px;
+            color: white;
+            background-color: #5093ad;
+            font-size: 13px;
+            font-weight: bold;
+            margin-right: 4px;
+            cursor: pointer;
+            filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.1));
+        }
+    }
+}
+
+.add {
+    width: 24px;
+    height: 24px;
+    background-color: white;
+    border-radius: 24px;
+    display: inline-block;
+    vertical-align: middle;
+    padding: 12px;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+    cursor: pointer;
+    margin-left: 18px;
+    transition: filter .2s;
+
+    &:hover {
+        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+    }
+}
+
+.resourcespread {
+    width: calc(100vw - 160px);
+    margin: 0 auto;
+    max-width: 800px;
+    padding: 40px;
+    position: relative;
+
+    background-color: white;
+    border-radius: 8px;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.05));
+
+    span.return {
+        cursor: pointer;
+
+        i {
+            vertical-align: middle;
+            margin-right: 8px;
+            transform: translateY(-2px);
+            font-size: 20px;
+            transition: transform .2s;
+        }
+
+        &:hover {
+            text-decoration: underline;
+
+            i {
+                transform: translateX(-4px) translateY(-2px);
+            }
+        }
+    }
+
+    img {
+        width: 280px;
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        border-radius: 4px;
+        filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.1));
+    }
+
+    h5 {
+        margin: 0;
+        opacity: 0.8;
+        margin-top: 24px;
+    }
+
+    input {
+        font-size: 26px;
+        padding: 12px;
+        margin: 24px 0 8px 0;
+        transform: translateX(-2px);
+        border-radius: 8px;
+        border: none;
+        background-color: rgb(245, 245, 245);
+        border: 2px solid white;
+
+        &:focus {
+            outline: none;
+
+            &:not([readonly]) {
+                border-color: rgba(117, 117, 140, 0.4);
+            }
+        }
+
+        &[error] {
+            border-color: rgba(146, 0, 0, 0.4);
+        }
+
+        &[disabled] {
+            opacity: 0.6;
+        }
+    }
+
+    i.status {
+        margin-left: -30px;
+        transition: margin-left .2s;
+
+        &[enabled] {
+            margin-left: 8px;
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotate(0deg);
+            }
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        &[loading] {
+            animation: spin 1.5s linear infinite;
+        }
+    }
+
+    h4 {
+        margin: 0;
+        font-weight: bold;
+        font-size: 14px;
+        opacity: 0.8;
+        margin-bottom: 28px;
+
+        &.ref {
+            margin-bottom: 8px;
+        }
+    }
+
+    button {
+        padding: 8px 12px;
+        background: #5093ad;
+        border-radius: 4px;
+        margin-top: 18px;
+        color: white;
+        border: none;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .tags {
+        div {
+            display: inline-block;
+            vertical-align: middle;
+            padding: 2px 8px 3px 8px;
+            border-radius: 24px;
+            color: white;
+            background-color: #5093ad;
+            font-size: 13px;
+            font-weight: bold;
+            margin-right: 4px;
+            cursor: pointer;
+            filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.1));
+        }
+    }
+}
+
 #notifications {
     position: absolute;
     bottom: 40px;
@@ -415,7 +632,7 @@ table {
             opacity: 0.8;
         }
 
-        input {
+        input[type=text], input[type=password] {
             width: 244px;
             margin: 0 70px;
             padding: 8px;
@@ -435,6 +652,10 @@ table {
             border: none;
             font-weight: bold;
             cursor: pointer;
+        }
+
+        .other {
+            text-align: center;
         }
     }
 }

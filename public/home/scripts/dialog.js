@@ -20,11 +20,25 @@
                 this.elm.querySelector('h3').innerText = this.data.title
                 this.elm.querySelector('p').innerText = this.data.description
                 this.elm.querySelector('button').innerText = this.data.button || 'SUBMIT'
+                this.elm.querySelector('button').style.backgroundColor = this.data.buttonbg || ''
+                this.elm.querySelector('.other').innerHTML = this.data.other || ''
 
                 clearListeners(this.elm.querySelector('button'))
                 this.elm.querySelector('button').addEventListener('click', () => {
+                    let inputs = Array.prototype.slice.call(this.elm.querySelectorAll('input:not([ignoreval])'))
+                    let fails = inputs.filter(inp => inp.getAttribute('required') === '' && !inp.value)
+                    if (fails.length > 0) return this.errorfield(fails[0])
+
                     this.dismiss(false)
-                    this.callback('complete', { values: Array.prototype.slice.call(this.elm.querySelectorAll('input')).map(el => el.value) })
+                    let vals = inputs.map(el => el.value)
+
+                    if (!this.data.execs) this.data.execs = []
+                    this.data.execs.forEach(ex => {
+                        let dat = eval(ex)
+                        if (dat) vals.push(dat)
+                    })
+
+                    this.callback('complete', { values: vals })
                 })
 
                 this.data.inputs.forEach(indat => {
@@ -32,6 +46,8 @@
                     inp.value = indat.value || ''
                     inp.type = indat.type || 'text'
                     inp.placeholder = indat.placeholder || ''
+                    inp.name = indat.name || ''
+                    if (indat.required) inp.setAttribute('required', '')
                     this.elm.insertBefore(inp, this.elm.querySelector('button'))
                 })
             }
@@ -58,6 +74,10 @@
         on(event, fn) {
             if (!this.callbacks[event]) this.callbacks[event] = [fn]
             else this.callbacks[event].push(fn)
+        }
+        errorfield(elm) {
+            elm.style.outline = '2px solid #b30202'
+            elm.focus()
         }
     }
 

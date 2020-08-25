@@ -56,6 +56,8 @@
             '^\/$': '/home/pages/home.js',
             '^\/users$': '/home/pages/users.js',
             '^\/users\/.+$': '/home/pages/users_specific.js',
+            '^\/resources$': '/home/pages/resources.js',
+            '^\/resources\/.+$': '/home/pages/resources_specific.js',
             '^.+$': '/home/pages/404.js'
         }
     }
