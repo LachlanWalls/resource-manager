@@ -873,7 +873,7 @@ table td {
 }
 
 #notifications {
-  position: absolute;
+  position: fixed;
   bottom: 40px;
   right: 40px;
   z-index: 20;
@@ -901,7 +901,7 @@ table td {
 #dialogs .overlay {
   z-index: 20;
   background-color: rgba(0, 0, 0, 0.4);
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
@@ -912,7 +912,7 @@ table td {
   z-index: 21;
   width: 400px;
   height: auto;
-  position: absolute;
+  position: fixed;
   top: 50vh;
   -webkit-transform: translateY(-50%);
           transform: translateY(-50%);
