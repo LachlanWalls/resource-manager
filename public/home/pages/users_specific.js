@@ -130,8 +130,6 @@
         user = res
     })
 
-    document.querySelector('span.return').addEventListener('click', () => Handler.go('/users'))
-
     document.querySelectorAll('.toggle').forEach(tog => tog.addEventListener('click', async() => {
         if (tog.getAttribute('checked') === '') tog.removeAttribute('checked')
         else tog.setAttribute('checked', '')
@@ -161,6 +159,7 @@
         tog.removeAttribute('disabled')
     }))
 
+    elm.querySelector('span.return').addEventListener('click', () => Handler.go('/users'))
     window.dispatchEvent(new Event('SPAloaded'))
 
 })()

@@ -206,8 +206,7 @@
 
     document.querySelectorAll('.instance').forEach(el => el.addEventListener('click', e => Handler.go(`/resources/${resource.id}/instances/${e.target.id}`)))
     document.querySelectorAll('.attachment').forEach(el => el.addEventListener('click', e => Handler.go(`/resources/${resource.id}/attachments/${e.target.id}`)))
-
-    document.querySelector('span.return').addEventListener('click', () => Handler.go('/resources'))
+    elm.querySelector('span.return').addEventListener('click', () => Handler.go('/resources'))
 
     window.dispatchEvent(new Event('SPAloaded'))
 

@@ -123,8 +123,7 @@
     }
 
     elm.appendChild(cont)
-
-    document.querySelector('span.return').addEventListener('click', () => Handler.go('/resources/' + resource.id + (instance ? `/instances/${instance.id}`:'')))
+    elm.querySelector('span.return').addEventListener('click', () => Handler.go('/resources/' + resource.id + (instance ? `/instances/${instance.id}`:'')))
 
     window.dispatchEvent(new Event('SPAloaded'))
 
