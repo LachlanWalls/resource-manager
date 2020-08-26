@@ -3,11 +3,12 @@ const path = require('path')
 const rootdir = path.join(__dirname, '../')
 const jwt = require('jsonwebtoken')
 const WEB_TOKEN_SECRET = fs.readFileSync(rootdir + 'jwtsecret.key', 'utf-8')
+const config = require('../config.json')
 
 const permissions = require('./permissions')
 
 const userFromID = async(db, id) => {
-    if (id === 'admin') return { id: 'admin', username: 'admin', reference: 'admin', permissions: '10000' }
+    if (id === config.admin.username) return { id: config.admin.username, username: config.admin.username, reference: config.admin.username, permissions: 8 }
     let users = await db.query('SELECT * FROM users WHERE id = ?', [id])
     if (users.length === 0) {
         users = await db.query('SELECT * FROM users WHERE reference = ?', [id])

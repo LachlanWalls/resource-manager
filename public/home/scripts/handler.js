@@ -55,7 +55,7 @@
         pages: {
             '^\/$': '/home/pages/home.js',
             '^\/users\/?$': '/home/pages/users.js',
-            '^\/users\/U(-[0-9]{4}){3}\/?$': '/home/pages/users_specific.js',
+            '^\/users\/.+\/?$': '/home/pages/users_specific.js',
             '^\/resources\/?$': '/home/pages/resources.js',
             '^\/resources\/R(-[0-9]{4}){3}\/?$': '/home/pages/resources_specific.js',
             '^\/resources\/R(-[0-9]{4}){3}\/instances\/I(-[0-9]{4}){3}\/?$': '/home/pages/instances_specific.js',

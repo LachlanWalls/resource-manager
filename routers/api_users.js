@@ -11,8 +11,6 @@ module.exports = {
         const router = express.Router()
 
         router.get('/', async(req, res) => {
-            await new Promise((resolve, reject) => setTimeout(resolve, 200))
-
             const permres = await utils.userFromHeaderHasPerm(db, req.headers.authorization, 'MANAGE_USERS')
             if (permres.err) return res.send(permres)
 
@@ -21,8 +19,6 @@ module.exports = {
         })
 
         router.get('/:user', async(req, res) => {
-            await new Promise((resolve, reject) => setTimeout(resolve, 100))
-
             const requser = await utils.userFromHeader(db, req.headers.authorization)
             if (requser.err) return res.send(requser)
 
@@ -36,8 +32,6 @@ module.exports = {
         })
 
         router.post('/', async(req, res) => {
-            await new Promise((resolve, reject) => setTimeout(resolve, 300))
-
             const permres = await utils.userFromHeaderHasPerm(db, req.headers.authorization, 'MANAGE_USERS')
             if (permres.err) return res.send(permres)
 
@@ -62,8 +56,6 @@ module.exports = {
         })
 
         router.put('/:user', async(req, res) => {
-            await new Promise((resolve, reject) => setTimeout(resolve, 200))
-
             const requser = await utils.userFromHeader(db, req.headers.authorization)
             if (requser.err) return res.send(requser)
 
@@ -110,8 +102,6 @@ module.exports = {
         })
 
         router.delete('/:user', async(req, res) => {
-            await new Promise((resolve, reject) => setTimeout(resolve, 200))
-
             const requser = await utils.userFromHeader(db, req.headers.authorization)
             if (requser.err) return res.send(requser)
 

@@ -25,7 +25,7 @@
         }
         
         const hasPerm = (dec, p) => decodeBitfield(dec).includes(p)
-        const checkPerm = (dec, p) => decodeBitfield(dec).includes(p) || decodeBitfield(dec).includes('ADMIN')
+        const checkPerm = (dec, p) => decodeBitfield(dec).includes(p) || decodeBitfield(dec).includes('ADMIN') || decodeBitfield(dec).includes('OWNER')
         
         const addPerm = (dec, p) => {
             let userperms = decodeBitfield(dec)

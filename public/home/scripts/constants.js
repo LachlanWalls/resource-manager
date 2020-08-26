@@ -1,10 +1,9 @@
 (() => {
 
     const PERMISSIONS = [
+        'OWNER',
         'ADMIN',
         'MANAGE_USERS',
-        'MANAGE_LOANS',
-        'MANAGE_TAGS',
         'MANAGE_RESOURCES'
     ]
 

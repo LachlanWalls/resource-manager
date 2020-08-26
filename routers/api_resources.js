@@ -105,8 +105,6 @@ module.exports = {
             const permres = await utils.userFromHeaderHasPerm(db, req.headers.authorization, 'MANAGE_RESOURCES')
             if (permres.err) return res.send(permres)
 
-            if (req.params.resource === 'R-1234-5678-9012') return res.status(204).send()
-
             let resource = await getAndProcessResource(req.params.resource)
             if (!resource) return res.status(404).send({"err": "unknown-resource"})
 
