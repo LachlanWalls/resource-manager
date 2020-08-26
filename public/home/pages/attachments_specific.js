@@ -72,7 +72,7 @@
                     attachment.url = dat.values[0]
                     cont.querySelector('img').src = dat.values[0]
                     attachment.description = dat.values[1]
-                    cont.querySelector('p.desc').innerText = dat.values[1]
+                    cont.querySelector('p.desc').innerText = dat.values[1] || '[no description]'
                     attachment.iscover = (dat.values[2] === 'true') ? true:false
                     cont.querySelector('h4.type').innerText = attachment.id + (attachment.iscover ? ' • Cover':'')
                 } else {
@@ -100,16 +100,12 @@
                 const res = await api.delete(location.pathname)
                 
                 if (!res.err) {
-                    Handler.go(`/resources/${resource.id}${instance ? `/instances/${instace.id}`:''}`)
+                    Handler.go(`/resources/${resource.id}${instance ? `/instances/${instance.id}`:''}`)
                     not.setText('Attachment deleted')
                     not.setType('check')
                     window.setTimeout(() => not.remove(), 4000)
-                    let res = dcache.resources.find(r => r.id === resource.id)
-                    if (!instance) res.instances.splice(res.instances.indexOf(instance), 1)
-                    else {
-                        let ins = res.instances.find(instance)
-                        ins.attachments.splice(ins.attachments.indexOf(attachment), 1)
-                    }
+                    let res = dcache.resources.findIndex(r => r.id === resource.id)
+                    dcache.resources.splice(res, 1)
                 } else {
                     console.error(res)
                     not.setText('An error occurred deleting this attachment')

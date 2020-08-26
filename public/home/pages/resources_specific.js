@@ -114,7 +114,7 @@
                     not.setType('check')
                     window.setTimeout(() => not.remove(), 4000)
                     resource.description = dat.values[0]
-                    cont.querySelector('p.desc').innerText = dat.values[0]
+                    cont.querySelector('p.desc').innerText = dat.values[0] || '[no description]'
                 } else {
                     console.error(res)
                     not.setText('An error occurred updating the description')
@@ -162,7 +162,7 @@
     if (resource.type === 'instanced') {
         let instcont = document.createElement('div')
         instcont.className = 'resource-instances'
-        instcont.innerHTML = '<h3>Instances</h3><i class="material-icons">add</i>'
+        instcont.innerHTML = '<h3>Instances</h3>' + (canedit ? '<i class="material-icons">add</i>':'')
         instcont.innerHTML += resource.instances.map(inst => `<div class='instance' id='${inst.id}'>${inst.description || '[no description]'}</div>`).join('') || '[no instances]'
         elm.appendChild(instcont)
     
@@ -196,13 +196,42 @@
         })
     }
 
-    if (resource.attachments.length > 0) {
-        let attcont = document.createElement('div')
-        attcont.className = 'resource-attachments'
-        attcont.innerHTML = '<h3>Attachments</h3><i class="material-icons">add</i>'
-        attcont.innerHTML += resource.attachments.map(att => `<img class='attachment' id='${att.id}' src='${att.url}'>`).join('')
-        elm.appendChild(attcont)
-    }
+    let attcont = document.createElement('div')
+    attcont.className = 'resource-attachments'
+    attcont.innerHTML = '<h3>Attachments</h3>' + (canedit ? '<i class="material-icons">add</i>':'')
+    attcont.innerHTML += resource.attachments.map(att => `<img class='attachment' id='${att.id}' src='${att.url}'>`).join('') || '[no attachments]'
+    elm.appendChild(attcont)
+
+    document.querySelector('.resource-attachments>i').addEventListener('click', () => {
+        let d = new Dialog('input', {
+            title: 'Create Attachment',
+            description: `Create new attachment for ${resource.name}`,
+            button: 'CREATE',
+            inputs: [{ placeholder: 'URL', required: true }, { placeholder: 'Description' }],
+            other: `<input type='checkbox' value='cover' name='cv' id='467' ignoreval><label for='467'> Cover Image</label>`,
+            execs: ["document.querySelector('[name=cv]').checked ? 'true':'false'"]
+        })
+
+        d.on('complete', async dat => {
+            let not = Notif('Creating...', 'autorenew')
+            const res = await api.post(`/resources/${resource.id}/attachments`, { url: dat.values[0], description: dat.values[1], iscover: (dat.values[2] === 'true') ? true:false })
+            
+            if (!res.err) {
+                window.setTimeout(() => {
+                    not.remove()
+                    dcache.resources.splice(dcache.resources.findIndex(r => r.id === resource.id), 1)
+                    Handler.go('/resources/' + resource.id + '/attachments/' + res.id)
+                }, 10)
+            } else {
+                console.error(res)
+                not.setText('An error occurred creating this attachment')
+                not.setType('error_outline')
+                window.setTimeout(() => not.remove(), 4000)
+            }
+        })
+
+        d.show()
+    })
 
     document.querySelectorAll('.instance').forEach(el => el.addEventListener('click', e => Handler.go(`/resources/${resource.id}/instances/${e.target.id}`)))
     document.querySelectorAll('.attachment').forEach(el => el.addEventListener('click', e => Handler.go(`/resources/${resource.id}/attachments/${e.target.id}`)))

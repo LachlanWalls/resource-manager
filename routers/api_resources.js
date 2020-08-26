@@ -169,6 +169,31 @@ module.exports = {
             return res.status(204).send()
         })
 
+        router.post('/:resource/attachments', async(req, res) => {
+            const permres = await utils.userFromHeaderHasPerm(db, req.headers.authorization, 'MANAGE_RESOURCES')
+            if (permres.err) return res.send(permres)
+
+            let resource = await getAndProcessResource(req.params.resource)
+            if (!resource) return res.status(404).send({"err": "unknown-resource"})
+
+            const gr = () => Math.floor(Math.random() * 10)
+            const id = `A-${gr()}${gr()}${gr()}${gr()}-${gr()}${gr()}${gr()}${gr()}-${gr()}${gr()}${gr()}${gr()}`
+            if (!req.body.url) return res.send({"err": "missing-url"})
+            const url = req.body.url
+            const desc = req.body.description || null
+            const iscover = req.body.iscover ? 1:0
+
+            await db.query('INSERT INTO resource_attachments (`id`, `res_id`, `url`, `description`, `iscover`) VALUES (?, ?, ?, ?, ?)', [id, resource.id, url, desc, iscover])
+
+            return res.send({
+                "id": id,
+                "res_id": resource.id,
+                "url": url,
+                "description": desc,
+                "iscover": (iscover === 1) ? true : false
+            })
+        })
+
         router.put('/:resource/attachments/:attachment', async(req, res) => {
             const permres = await utils.userFromHeaderHasPerm(db, req.headers.authorization, 'MANAGE_RESOURCES')
             if (permres.err) return res.send(permres)
@@ -210,6 +235,34 @@ module.exports = {
             await db.query('DELETE FROM resource_attachments WHERE id = ?', [attachment.id])
 
             return res.status(204).send()
+        })
+
+        router.post('/:resource/instances/:instance/attachments', async(req, res) => {
+            const permres = await utils.userFromHeaderHasPerm(db, req.headers.authorization, 'MANAGE_RESOURCES')
+            if (permres.err) return res.send(permres)
+
+            let resource = await getAndProcessResource(req.params.resource)
+            if (!resource) return res.status(404).send({"err": "unknown-resource"})
+
+            let instance = resource.instances.find(inst => inst.id === req.params.instance)
+            if (!instance) return res.status(404).send({"err": "unknown-instance"})
+
+            const gr = () => Math.floor(Math.random() * 10)
+            const id = `A-${gr()}${gr()}${gr()}${gr()}-${gr()}${gr()}${gr()}${gr()}-${gr()}${gr()}${gr()}${gr()}`
+            if (!req.body.url) return res.send({"err": "missing-url"})
+            const url = req.body.url
+            const desc = req.body.description || null
+            const iscover = req.body.iscover ? 1:0
+
+            await db.query('INSERT INTO resource_attachments (`id`, `res_id`, `url`, `description`, `iscover`) VALUES (?, ?, ?, ?, ?)', [id, instance.id, url, desc, iscover])
+
+            return res.send({
+                "id": id,
+                "res_id": instance.id,
+                "url": url,
+                "description": desc,
+                "iscover": (iscover === 1) ? true : false
+            })
         })
 
         router.put('/:resource/instances/:instance/attachments/:attachment', async(req, res) => {
