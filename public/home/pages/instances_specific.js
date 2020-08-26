@@ -46,8 +46,7 @@
                 description: `Edit instance ${instance.id} for ${resource.name}`,
                 inputs: [{
                     placeholder: 'Description',
-                    value: instance.description,
-                    required: true
+                    value: instance.description
                 }]
             })
 

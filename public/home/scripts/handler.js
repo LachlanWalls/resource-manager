@@ -54,11 +54,12 @@
         // all of the pages, matched by regular expressions (regex) and their corresponding render files
         pages: {
             '^\/$': '/home/pages/home.js',
-            '^\/users$': '/home/pages/users.js',
-            '^\/users\/U-[0-9]{4}-[0-9]{4}-[0-9]{4}$': '/home/pages/users_specific.js',
-            '^\/resources$': '/home/pages/resources.js',
-            '^\/resources\/R-[0-9]{4}-[0-9]{4}-[0-9]{4}$': '/home/pages/resources_specific.js',
-            '^\/resources\/R-[0-9]{4}-[0-9]{4}-[0-9]{4}\/instances\/I-[0-9]{4}-[0-9]{4}-[0-9]{4}$': '/home/pages/instances_specific.js',
+            '^\/users\/?$': '/home/pages/users.js',
+            '^\/users\/U(-[0-9]{4}){3}\/?$': '/home/pages/users_specific.js',
+            '^\/resources\/?$': '/home/pages/resources.js',
+            '^\/resources\/R(-[0-9]{4}){3}\/?$': '/home/pages/resources_specific.js',
+            '^\/resources\/R(-[0-9]{4}){3}\/instances\/I(-[0-9]{4}){3}\/?$': '/home/pages/instances_specific.js',
+            '^\/resources\/R(-[0-9]{4}){3}(\/instances\/I(-[0-9]{4}){3})?\/attachments\/A(-[0-9]{4}){3}\/?$': '/home/pages/attachments_specific.js',
             '^.+$': '/home/pages/404.js'
         }
     }

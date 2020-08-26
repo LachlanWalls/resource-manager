@@ -22,7 +22,10 @@ module.exports = {
             resource.type = ['singular', 'instanced'][resource.type]
             if (resource.type === 'instanced') {
                 resource.instances = await db.query('SELECT * FROM resource_instances WHERE resource = ?', [resource.id])
-                for (let inst of resource.instances) inst.attachments = await db.query('SELECT * FROM resource_attachments WHERE res_id = ?', [inst.id])
+                for (let inst of resource.instances) {
+                    inst.attachments = await db.query('SELECT * FROM resource_attachments WHERE res_id = ?', [inst.id])
+                    for (let att of inst.attachments) att.iscover = Boolean(att.iscover)
+                }
             }
             resource.attachments = await db.query('SELECT * FROM resource_attachments WHERE res_id = ?', [resource.id])
             let rtags = await db.query('SELECT * FROM resource_tags WHERE res_id = ?', [resource.id])
@@ -82,7 +85,7 @@ module.exports = {
             let resource = await getAndProcessResource(req.params.resource)
             if (!resource) return res.status(404).send({"err": "unknown-resource"})
 
-            if (req.body.name) {
+            if ('name' in req.body) {
                 const newname = req.body.name
                 const newreference = newname.replace(/[^0-9A-Za-z-]/g, '-').toLowerCase()
                 const testresource = await db.query('SELECT * FROM resources WHERE reference = ?', [newreference])
@@ -90,7 +93,7 @@ module.exports = {
                 await db.query('UPDATE resources SET name = ?, reference = ? WHERE id = ?', [newname, newreference, resource.id])
             }
 
-            if (req.body.description) {
+            if ('description' in req.body) {
                 await db.query('UPDATE resources SET description = ? WHERE id = ?', [req.body.description, resource.id])
             }
 
@@ -143,7 +146,7 @@ module.exports = {
             let instance = resource.instances.find(inst => inst.id === req.params.instance)
             if (!instance) return res.status(404).send({"err": "unknown-instance"})
 
-            if (req.body.description) {
+            if ('description' in req.body) {
                 await db.query('UPDATE resource_instances SET description = ? WHERE id = ?', [req.body.description, instance.id])
                 instance.description = req.body.description
             }
@@ -162,6 +165,98 @@ module.exports = {
             if (!instance) return res.status(404).send({"err": "unknown-instance"})
 
             await db.query('DELETE FROM resource_instances WHERE id = ?', [instance.id])
+
+            return res.status(204).send()
+        })
+
+        router.put('/:resource/attachments/:attachment', async(req, res) => {
+            const permres = await utils.userFromHeaderHasPerm(db, req.headers.authorization, 'MANAGE_RESOURCES')
+            if (permres.err) return res.send(permres)
+
+            let resource = await getAndProcessResource(req.params.resource)
+            if (!resource) return res.status(404).send({"err": "unknown-resource"})
+
+            let attachment = resource.attachments.find(att => att.id === req.params.attachment)
+            if (!attachment) return res.status(404).send({"err": "unknown-attachment"})
+
+            if ('description' in req.body) {
+                await db.query('UPDATE resource_attachments SET description = ? WHERE id = ?', [req.body.description, attachment.id])
+                attachment.description = req.body.description
+            }
+
+            if ('iscover' in req.body) {
+                await db.query('UPDATE resource_attachments SET iscover = ? WHERE id = ?', [req.body.iscover ? 1:0, attachment.id])
+                attachment.iscover = req.body.iscover
+            }
+
+            if ('url' in req.body) {
+                await db.query('UPDATE resource_attachments SET url = ? WHERE id = ?', [req.body.url, attachment.id])
+                attachment.url = req.body.url
+            }
+
+            return res.send(attachment)
+        })
+
+        router.delete('/:resource/attachments/:attachment', async(req, res) => {
+            const permres = await utils.userFromHeaderHasPerm(db, req.headers.authorization, 'MANAGE_RESOURCES')
+            if (permres.err) return res.send(permres)
+
+            let resource = await getAndProcessResource(req.params.resource)
+            if (!resource) return res.status(404).send({"err": "unknown-resource"})
+
+            let attachment = resource.attachments.find(att => att.id === req.params.attachment)
+            if (!attachment) return res.status(404).send({"err": "unknown-attachment"})
+
+            await db.query('DELETE FROM resource_attachments WHERE id = ?', [attachment.id])
+
+            return res.status(204).send()
+        })
+
+        router.put('/:resource/instances/:instance/attachments/:attachment', async(req, res) => {
+            const permres = await utils.userFromHeaderHasPerm(db, req.headers.authorization, 'MANAGE_RESOURCES')
+            if (permres.err) return res.send(permres)
+
+            let resource = await getAndProcessResource(req.params.resource)
+            if (!resource) return res.status(404).send({"err": "unknown-resource"})
+
+            let instance = resource.instances.find(inst => inst.id === req.params.instance)
+            if (!instance) return res.status(404).send({"err": "unknown-instance"})
+
+            let attachment = instance.attachments.find(att => att.id === req.params.attachment)
+            if (!attachment) return res.status(404).send({"err": "unknown-attachment"})
+
+            if ('description' in req.body) {
+                await db.query('UPDATE resource_attachments SET description = ? WHERE id = ?', [req.body.description, attachment.id])
+                attachment.description = req.body.description
+            }
+
+            if ('iscover' in req.body) {
+                await db.query('UPDATE resource_attachments SET iscover = ? WHERE id = ?', [req.body.iscover ? 1:0, attachment.id])
+                attachment.iscover = req.body.iscover
+            }
+
+            if ('url' in req.body) {
+                await db.query('UPDATE resource_attachments SET url = ? WHERE id = ?', [req.body.url, attachment.id])
+                attachment.url = req.body.url
+            }
+
+            return res.send(attachment)
+        })
+
+        router.delete('/:resource/instances/:instance/attachments/:attachment', async(req, res) => {
+            const permres = await utils.userFromHeaderHasPerm(db, req.headers.authorization, 'MANAGE_RESOURCES')
+            if (permres.err) return res.send(permres)
+
+            let resource = await getAndProcessResource(req.params.resource)
+            if (!resource) return res.status(404).send({"err": "unknown-resource"})
+
+            let instance = resource.instances.find(inst => inst.id === req.params.instance)
+            if (!instance) return res.status(404).send({"err": "unknown-instance"})
+
+            let attachment = instance.attachments.find(att => att.id === req.params.attachment)
+            if (!attachment) return res.status(404).send({"err": "unknown-attachment"})
+
+            await db.query('DELETE FROM resource_attachments WHERE id = ?', [attachment.id])
 
             return res.status(204).send()
         })

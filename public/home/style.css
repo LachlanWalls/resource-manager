@@ -801,6 +801,77 @@ table td {
   cursor: pointer;
 }
 
+.attachmentspread {
+  width: calc(100vw - 160px);
+  margin: 0 auto;
+  max-width: 800px;
+  padding: 40px;
+  position: relative;
+  background-color: white;
+  border-radius: 8px;
+  -webkit-filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.05));
+          filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.05));
+}
+
+.attachmentspread span.return {
+  cursor: pointer;
+}
+
+.attachmentspread span.return i {
+  vertical-align: middle;
+  margin-right: 8px;
+  -webkit-transform: translateY(-2px);
+          transform: translateY(-2px);
+  font-size: 20px;
+  -webkit-transition: -webkit-transform .2s;
+  transition: -webkit-transform .2s;
+  transition: transform .2s;
+  transition: transform .2s, -webkit-transform .2s;
+}
+
+.attachmentspread span.return:hover {
+  text-decoration: underline;
+}
+
+.attachmentspread span.return:hover i {
+  -webkit-transform: translateX(-4px) translateY(-2px);
+          transform: translateX(-4px) translateY(-2px);
+}
+
+.attachmentspread img {
+  width: 280px;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  border-radius: 4px;
+  -webkit-filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.1));
+          filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.1));
+}
+
+.attachmentspread h4 {
+  margin: 0;
+  font-weight: bold;
+  font-size: 14px;
+  opacity: 0.8;
+  margin-bottom: 28px;
+  margin-top: 18px;
+}
+
+.attachmentspread h4.ref {
+  margin-bottom: 8px;
+}
+
+.attachmentspread button {
+  padding: 8px 12px;
+  background: #5093ad;
+  border-radius: 4px;
+  margin-top: 18px;
+  color: white;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+}
+
 #notifications {
   position: absolute;
   bottom: 40px;
