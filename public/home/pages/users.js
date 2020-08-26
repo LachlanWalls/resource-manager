@@ -16,6 +16,42 @@
         while (elm.tagName !== 'TR') elm = elm.parentElement
         Handler.go('/users/' + elm.querySelector('td[ref]').innerText)
     }))
+
+    if (permissions.checkPerm(client.permissions, 'MANAGE_USERS')) {
+        let add = document.createElement('i')
+        add.className = 'material-icons users-add'
+        add.innerHTML = 'add'
+        elm.appendChild(add)
+
+        add.addEventListener('click', () => {
+            let d = new Dialog('input', {
+                title: 'Create User',
+                description: ``,
+                button: 'CREATE',
+                inputs: [{ placeholder: 'Name', required: true }, { placeholder: 'Password', required: true }]
+            })
+
+            d.on('complete', async dat => {
+                let not = Notif('Creating...', 'autorenew')
+                const res = await api.post(`/users`, { username: dat.values[0], password: dat.values[1] })
+                
+                if (!res.err) {
+                    window.setTimeout(() => {
+                        not.remove()
+                        dcache.users = []
+                        Handler.go('/users/' + res.id)
+                    }, 10)
+                } else {
+                    console.error(res)
+                    not.setText('An error occurred creating this user')
+                    not.setType('error_outline')
+                    window.setTimeout(() => not.remove(), 4000)
+                }
+            })
+
+            d.show()
+        })
+    }
     
     window.dispatchEvent(new Event('SPAloaded'))
 
