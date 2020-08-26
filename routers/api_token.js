@@ -18,8 +18,8 @@ module.exports = {
             jwt.verify(req.body.token, WEB_TOKEN_SECRET, async(err, decoded) => {
                 if (err) return res.send({"err": "invalid-token"})
 
-                if (decoded.sub === 'admin') {
-                    let payload = { id: decoded.sub, username: 'admin', reference: 'admin', permissions: 16 }
+                if (decoded.sub === config.admin.username) {
+                    let payload = { id: config.admin.username, username: config.admin.username, reference: config.admin.username, permissions: 8 }
                     if (decoded.exp - (60*60*24*7) < Date.now() / 1000) payload.refresh = true
                     return res.send(payload)
                 }
