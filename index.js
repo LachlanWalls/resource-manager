@@ -8,6 +8,8 @@ const render = require('./scripts/render')
 app.use(express.json())
 app.use(express.static('public'))
 
+let dbconnected = false
+
 mariadb.createConnection(config.mariaoptions).then(async con => {
 
     const routerFiles = fs.readdirSync('./routers')
@@ -19,8 +21,25 @@ mariadb.createConnection(config.mariaoptions).then(async con => {
         if (config.logging) console.log('router online for ' + routerObj.path + (routerObj.name ? ` (${routerObj.name})` : ''))
     }
 
-    app.get(/\/.*/, (req, res) => res.send(render(__dirname + '/html/home.html')))
+    dbconnected = true
+
+    app.get(/\/.*/, (req, res) => {
+        if (dbconnected) res.send(render(__dirname + '/html/home.html'))
+        else res.send(render(__dirname + '/html/error.html'))
+    })
 
     app.listen(8080, () => console.log('resource-manager listening on localhost:8080'))
 
-}).catch(console.error)
+}).catch(() => {
+
+    dbconnected = false
+
+    app.get(/\/.*/, (req, res) => {
+        if (dbconnected) res.send(render(__dirname + '/html/home.html'))
+        else res.send(render(__dirname + '/html/error.html'))
+    })
+
+    app.listen(8080, () => console.log('resource-manager listening on localhost:8080'))
+
+    console.error('Failed to connect to database! Please check your MariaDB config.')
+})

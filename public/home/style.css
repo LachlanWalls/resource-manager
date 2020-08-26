@@ -180,6 +180,8 @@ table {
   -webkit-filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.05));
           filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.05));
   border: none;
+  max-width: 800px;
+  margin: 0 auto;
 }
 
 table th {
@@ -274,7 +276,7 @@ table td {
 }
 
 .userspread input[disabled] {
-  opacity: 0.6;
+  opacity: 0.4;
 }
 
 .userspread i.status {
@@ -474,6 +476,27 @@ table td {
 }
 
 .add:hover {
+  -webkit-filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+          filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+.users-add {
+  width: 24px;
+  height: 24px;
+  background-color: white;
+  border-radius: 24px;
+  margin: 24px calc(50vw - 40px - 12px) 0;
+  -webkit-filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+          filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+  cursor: pointer;
+  -webkit-transition: -webkit-filter .2s;
+  transition: -webkit-filter .2s;
+  transition: filter .2s;
+  transition: filter .2s, -webkit-filter .2s;
+  padding: 12px;
+}
+
+.users-add:hover {
   -webkit-filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
           filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
 }

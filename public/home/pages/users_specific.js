@@ -25,15 +25,14 @@
 
     let cont = document.createElement('div')
     cont.className = 'userspread'
-    cont.innerHTML = `<span class='return'><i class='material-icons'>arrow_back</i>All Users</span><h5>${user.id}</h5><input type='text' value='${user.username}'><i class='status material-icons'>autorenew</i><br><h4>${user.reference}</h4>`
+    cont.innerHTML = `<span class='return'><i class='material-icons'>arrow_back</i>All Users</span><h5>${user.id}</h5><input type='text' value='${user.username}' ${permissions.checkPerm(user.permissions, 'OWNER') ? 'readonly':''}><i class='status material-icons'>autorenew</i><br><h4>${user.reference}</h4>`
 
-    if (permissions.checkPerm(client.permissions, 'ADMIN')) {
-        const formatpermission = perm => perm.toLowerCase().split('_').map(p => p.substring(0, 1).toUpperCase() + p.substring(1)).join(' ')
-        cont.innerHTML += CONSTANTS.PERMISSIONS.filter(p => p !== 'OWNER').map(p => `<div class='perm ${p}'><div class='toggle' ${permissions.hasPerm(user.permissions, p) ? 'checked':''} ${permissions.checkPerm(client.permissions, 'ADMIN') ? '':'disabled'}></div>${formatpermission(p)}</div>`).join('')
-    }
+    const formatpermission = perm => perm.toLowerCase().split('_').map(p => p.substring(0, 1).toUpperCase() + p.substring(1)).join(' ')
+    if (permissions.checkPerm(user.permissions, 'OWNER')) cont.innerHTML += `<div class='perm owner'><div class='toggle' checked disabled></div>Owner</div>`
+    else if (permissions.checkPerm(client.permissions, 'ADMIN')) cont.innerHTML += CONSTANTS.PERMISSIONS.filter(p => p !== 'OWNER').map(p => `<div class='perm ${p}'><div class='toggle' ${permissions.hasPerm(user.permissions, p) ? 'checked':''} ${permissions.checkPerm(client.permissions, 'ADMIN') ? '':'disabled'}></div>${formatpermission(p)}</div>`).join('')
 
     const userperms = permissions.decodeBitfield(client.permissions)
-    const canChangePassword = (userperms.includes('ADMIN') || client.id === user.id)
+    const canChangePassword = (userperms.includes('ADMIN') || client.id === user.id) && !userperms.includes('OWNER')
     if (canChangePassword) cont.innerHTML += '<button class="changepswd">Change Password</button>'
 
     elm.appendChild(cont)

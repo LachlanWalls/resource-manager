@@ -166,6 +166,8 @@ table {
     border-radius: 8px;
     filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.05));
     border: none;
+    max-width: 800px;
+    margin: 0 auto;
 
     th {
         font-weight: bold;
@@ -248,7 +250,7 @@ table {
         }
 
         &[disabled] {
-            opacity: 0.6;
+            opacity: 0.4;
         }
     }
 
@@ -418,6 +420,22 @@ table {
     cursor: pointer;
     margin-left: 18px;
     transition: filter .2s;
+
+    &:hover {
+        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+    }
+}
+
+.users-add {
+    width: 24px;
+    height: 24px;
+    background-color: white;
+    border-radius: 24px;
+    margin: 24px calc(50vw - 40px - 12px) 0;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+    cursor: pointer;
+    transition: filter .2s;
+    padding: 12px;
 
     &:hover {
         filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));

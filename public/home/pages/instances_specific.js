@@ -110,36 +110,38 @@
     attcont.innerHTML += instance.attachments.map(att => `<img class='attachment' id='${att.id}' src='${att.url}'>`).join('') || '[no attachments]'
     elm.appendChild(attcont)
 
-    document.querySelector('.resource-attachments>i').addEventListener('click', () => {
-        let d = new Dialog('input', {
-            title: 'Create Attachment',
-            description: `Create new attachment for ${instance.id} of ${resource.name}`,
-            button: 'CREATE',
-            inputs: [{ placeholder: 'URL', required: true }, { placeholder: 'Description' }],
-            other: `<input type='checkbox' value='cover' name='cv' id='467' ignoreval><label for='467'> Cover Image</label>`,
-            execs: ["document.querySelector('[name=cv]').checked ? 'true':'false'"]
+    if (canedit) {
+        document.querySelector('.resource-attachments>i').addEventListener('click', () => {
+            let d = new Dialog('input', {
+                title: 'Create Attachment',
+                description: `Create new attachment for ${instance.id} of ${resource.name}`,
+                button: 'CREATE',
+                inputs: [{ placeholder: 'URL', required: true }, { placeholder: 'Description' }],
+                other: `<input type='checkbox' value='cover' name='cv' id='467' ignoreval><label for='467'> Cover Image</label>`,
+                execs: ["document.querySelector('[name=cv]').checked ? 'true':'false'"]
+            })
+    
+            d.on('complete', async dat => {
+                let not = Notif('Creating...', 'autorenew')
+                const res = await api.post(`/resources/${resource.id}/instances/${instance.id}/attachments`, { url: dat.values[0], description: dat.values[1], iscover: (dat.values[2] === 'true') ? true:false })
+                
+                if (!res.err) {
+                    window.setTimeout(() => {
+                        not.remove()
+                        dcache.resources.splice(dcache.resources.findIndex(r => r.id === resource.id), 1)
+                        Handler.go('/resources/' + resource.id + '/instances/' + instance.id + '/attachments/' + res.id)
+                    }, 10)
+                } else {
+                    console.error(res)
+                    not.setText('An error occurred creating this attachment')
+                    not.setType('error_outline')
+                    window.setTimeout(() => not.remove(), 4000)
+                }
+            })
+    
+            d.show()
         })
-
-        d.on('complete', async dat => {
-            let not = Notif('Creating...', 'autorenew')
-            const res = await api.post(`/resources/${resource.id}/instances/${instance.id}/attachments`, { url: dat.values[0], description: dat.values[1], iscover: (dat.values[2] === 'true') ? true:false })
-            
-            if (!res.err) {
-                window.setTimeout(() => {
-                    not.remove()
-                    dcache.resources.splice(dcache.resources.findIndex(r => r.id === resource.id), 1)
-                    Handler.go('/resources/' + resource.id + '/instances/' + instance.id + '/attachments/' + res.id)
-                }, 10)
-            } else {
-                console.error(res)
-                not.setText('An error occurred creating this attachment')
-                not.setType('error_outline')
-                window.setTimeout(() => not.remove(), 4000)
-            }
-        })
-
-        d.show()
-    })
+    }
 
     document.querySelectorAll('.attachment').forEach(el => el.addEventListener('click', e => Handler.go(`/resources/${resource.id}/instances/${instance.id}/attachments/${e.target.id}`)))
     elm.querySelector('span.return').addEventListener('click', () => Handler.go('/resources/' + resource.id))

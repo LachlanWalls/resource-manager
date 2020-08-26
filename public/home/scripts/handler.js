@@ -19,6 +19,9 @@
         go: (url = location.pathname, load = true) => {
             if (load) Handler.loader.start()
             url = url.replace(location.origin, '')
+
+            if (url === '/') url = '/resources'
+
             history.pushState({}, SITENAME, url)
             Handler.log('loading ' + url)
 
