@@ -1,5 +1,12 @@
 (async() => {
 
+    /* resources_specific.js
+    - render a resource object
+    - provide edit and delete dialogs
+    - provide attachment management
+    - provide instance management
+    */
+
     let elm = window.renderElement
 
     const fail = message => {

@@ -1,5 +1,10 @@
 (async() => {
 
+    /* attachments_specific.js
+    - render an attachment object (for a resource or instance)
+    - provide edit and delete dialogs
+    */
+    
     let elm = window.renderElement
 
     const fail = message => {

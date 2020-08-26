@@ -7,6 +7,7 @@ const config = require('../config.json')
 
 const permissions = require('./permissions')
 
+// get a user object from an id or reference
 const userFromID = async(db, id) => {
     if (id === config.admin.username) return { id: config.admin.username, username: config.admin.username, reference: config.admin.username, permissions: 8 }
     let users = await db.query('SELECT * FROM users WHERE id = ?', [id])
@@ -19,6 +20,7 @@ const userFromID = async(db, id) => {
     return user
 }
 
+// get a user object from an Authorization header
 const userFromHeader = (db, header) => new Promise((resolve, reject) => {
     if (!header || header.match(/Bearer .+/).length === 0) resolve({"err": "no-authorization"})
     const token = header.replace('Bearer ', '')
@@ -30,6 +32,7 @@ const userFromHeader = (db, header) => new Promise((resolve, reject) => {
     })
 })
 
+// check if the user from an Authorization header has a specific permission
 const userFromHeaderHasPerm = async(db, header, perm) => {
     const user = await userFromHeader(db, header)
     if (user.err) return user
@@ -37,6 +40,7 @@ const userFromHeaderHasPerm = async(db, header, perm) => {
     else return {"err": "insufficient-permissions"}
 }
 
+// get all users
 const allUsers = async db => {
     let users = await db.query('SELECT * FROM users')
     for (let usr of users) delete usr.password

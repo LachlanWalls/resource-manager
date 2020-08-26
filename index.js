@@ -12,9 +12,11 @@ let dbconnected = false
 
 mariadb.createConnection(config.mariaoptions).then(async con => {
 
+    // fetch all express Router files from the routers directory
     const routerFiles = fs.readdirSync('./routers')
 
     for (const routerFile of routerFiles) {
+        // load the router into the webapp
         const routerObj = require('./routers/' + routerFile)
         const router = await routerObj.generate(config, con)
         app.use(routerObj.path, router)

@@ -21,6 +21,7 @@ module.exports = {
             if (!req.body.username) return res.send({"err": "missing-username"})
             if (!req.body.password) return res.send({"err": "missing-password"})
 
+            // check for an admin login
             if (req.body.username === config.admin.username) {
                 if (!config.admin.hashed && req.body.password !== config.admin.password) return res.send({"err": "incorrect-credentials"})
                 else if (config.admin.hashed && !bcrypt.compareSync(req.body.password, config.admin.password)) return res.send({"err": "incorrect-credentials"})
@@ -29,12 +30,15 @@ module.exports = {
                 return res.send({"token": token})
             }
 
+            // find the user
             const users = await db.query('SELECT * FROM users WHERE username = ?', [req.body.username])
             if (users.length === 0) return res.send({"err": "incorrect-credentials"})
 
+            // check password
             const user = users[0]
             if (!bcrypt.compareSync(req.body.password, user.password)) return res.send({"err": "incorrect-credentials"})
             
+            // generate token
             const token = jwt.sign({}, WEB_TOKEN_SECRET, { expiresIn: 60 * 60 * 24 * 14, subject: user.id })
             return res.send({"token": token})
         })

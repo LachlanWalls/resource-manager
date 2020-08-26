@@ -1,5 +1,11 @@
 (async() => {
 
+    /* instances_specific.js
+    - render an instance object
+    - provide edit and delete dialogs
+    - provide attachment management
+    */
+
     let elm = window.renderElement
 
     const fail = message => {

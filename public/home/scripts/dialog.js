@@ -7,6 +7,7 @@
 
     class Dialog {
         constructor(type, data) {
+            // create a dialog class
             this.elm = document.querySelector('#dialogs>.dialog.' + type)
             if (!this.elm) throw new Error('Invalid Dialog type')
             this.type = type
@@ -15,6 +16,7 @@
         }
         render() {
             if (this.type === 'input') {
+                // update all data
                 this.elm.querySelectorAll('input').forEach(inp => inp.parentElement.removeChild(inp))
 
                 this.elm.querySelector('h3').innerText = this.data.title
@@ -23,8 +25,11 @@
                 this.elm.querySelector('button').style.backgroundColor = this.data.buttonbg || ''
                 this.elm.querySelector('.other').innerHTML = this.data.other || ''
 
+                // clear lsiteners from previous instances
                 clearListeners(this.elm.querySelector('button'))
+
                 this.elm.querySelector('button').addEventListener('click', () => {
+                    // load basic input values
                     let inputs = Array.prototype.slice.call(this.elm.querySelectorAll('input:not([ignoreval])'))
                     let fails = inputs.filter(inp => inp.getAttribute('required') === '' && !inp.value)
                     if (fails.length > 0) return this.errorfield(fails[0])
@@ -32,15 +37,18 @@
                     this.dismiss(false)
                     let vals = inputs.map(el => el.value)
 
+                    // run custom value execs
                     if (!this.data.execs) this.data.execs = []
                     this.data.execs.forEach(ex => {
                         let dat = eval(ex)
                         if (dat) vals.push(dat)
                     })
 
+                    // broadcast completion
                     this.callback('complete', { values: vals })
                 })
 
+                // load up inputs
                 this.data.inputs.forEach(indat => {
                     let inp = document.createElement('input')
                     inp.value = indat.value || ''

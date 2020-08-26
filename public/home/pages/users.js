@@ -1,5 +1,9 @@
 (async() => {
 
+    /* users.js
+    - render all users
+    */
+
     let elm = window.renderElement
 
     window.dcache.users = await api.get('/users')

@@ -10,6 +10,7 @@ module.exports = {
 
         const router = express.Router()
 
+        // get all users
         router.get('/', async(req, res) => {
             const permres = await utils.userFromHeaderHasPerm(db, req.headers.authorization, 'MANAGE_USERS')
             if (permres.err) return res.send(permres)
@@ -18,6 +19,7 @@ module.exports = {
             return res.send(users)
         })
 
+        // get a user, by id or reference
         router.get('/:user', async(req, res) => {
             const requser = await utils.userFromHeader(db, req.headers.authorization)
             if (requser.err) return res.send(requser)
@@ -31,6 +33,7 @@ module.exports = {
             return res.send(user)
         })
 
+        // create a user
         router.post('/', async(req, res) => {
             const permres = await utils.userFromHeaderHasPerm(db, req.headers.authorization, 'MANAGE_USERS')
             if (permres.err) return res.send(permres)
@@ -55,6 +58,7 @@ module.exports = {
             })
         })
 
+        // update a user
         router.put('/:user', async(req, res) => {
             const requser = await utils.userFromHeader(db, req.headers.authorization)
             if (requser.err) return res.send(requser)
@@ -70,6 +74,7 @@ module.exports = {
             if (req.body.password && !canChangePassword) return res.send({"err": "insufficient-permissions"})
             if ((req.body.permissions || req.body.permissions === 0) && !canChangePermissions) return res.send({"err": "insufficient-permissions"})
 
+            // if it's the current user requesting a password change, check the current_password provided
             if (req.body.password && !permissions.checkPerm(requser.permissions, 'ADMIN')) {
                 if (!req.body.current_password) return res.send({"err": "missing-current_password"})
 
@@ -101,6 +106,7 @@ module.exports = {
             return res.send(newuser)
         })
 
+        // delete a user
         router.delete('/:user', async(req, res) => {
             const requser = await utils.userFromHeader(db, req.headers.authorization)
             if (requser.err) return res.send(requser)

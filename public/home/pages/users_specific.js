@@ -1,5 +1,12 @@
 (async() => {
 
+    /* users_specific.js
+    - render a user object
+    - provide username editing
+    - provide permission management
+    - provide password management
+    */
+
     let elm = window.renderElement
 
     const fail = message => {

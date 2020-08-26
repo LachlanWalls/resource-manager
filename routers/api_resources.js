@@ -9,6 +9,7 @@ module.exports = {
 
         const router = express.Router()
 
+        // get a specific resource by id
         async function getResource(identifier) {
             let res = await db.query('SELECT * FROM resources WHERE id = ?', [identifier])
             if (res.length > 0) return res[0]
@@ -17,6 +18,7 @@ module.exports = {
             return null
         }
 
+        // process a database resource object to make it API-friendly
         async function processResource(resource) {
             let tags = await db.query('SELECT * FROM tags')
             resource.type = ['singular', 'instanced'][resource.type]
@@ -40,12 +42,14 @@ module.exports = {
             return proc
         }
 
+        // get all resources
         router.get('/', async(req, res) => {
             let resources = await db.query('SELECT * FROM resources')
             await Promise.all(resources.map(res => processResource(res)))
             return res.send(resources)
         })
 
+        // create a new resource
         router.post('/', async(req, res) => {
             const permres = await utils.userFromHeaderHasPerm(db, req.headers.authorization, 'MANAGE_RESOURCES')
             if (permres.err) return res.send(permres)
@@ -72,12 +76,14 @@ module.exports = {
             })
         })
 
+        // get specific resource
         router.get('/:resource', async(req, res) => {
             let resource = await getAndProcessResource(req.params.resource)
             if (!resource) return res.status(404).send({"err": "unknown-resource"})
             return res.send(resource)
         })
 
+        // update a resource
         router.put('/:resource', async(req, res) => {
             const permres = await utils.userFromHeaderHasPerm(db, req.headers.authorization, 'MANAGE_RESOURCES')
             if (permres.err) return res.send(permres)
@@ -101,6 +107,7 @@ module.exports = {
             return res.send(resource)
         })
 
+        // delete a resource
         router.delete('/:resource', async(req, res) => {
             const permres = await utils.userFromHeaderHasPerm(db, req.headers.authorization, 'MANAGE_RESOURCES')
             if (permres.err) return res.send(permres)
@@ -113,6 +120,7 @@ module.exports = {
             return res.status(204).send()
         })
 
+        // create a resource instance
         router.post('/:resource/instances', async(req, res) => {
             const permres = await utils.userFromHeaderHasPerm(db, req.headers.authorization, 'MANAGE_RESOURCES')
             if (permres.err) return res.send(permres)
@@ -134,6 +142,7 @@ module.exports = {
             })
         })
 
+        // update an instance
         router.put('/:resource/instances/:instance', async(req, res) => {
             const permres = await utils.userFromHeaderHasPerm(db, req.headers.authorization, 'MANAGE_RESOURCES')
             if (permres.err) return res.send(permres)
@@ -152,6 +161,7 @@ module.exports = {
             return res.send(instance)
         })
 
+        // delete an instance
         router.delete('/:resource/instances/:instance', async(req, res) => {
             const permres = await utils.userFromHeaderHasPerm(db, req.headers.authorization, 'MANAGE_RESOURCES')
             if (permres.err) return res.send(permres)
@@ -167,6 +177,7 @@ module.exports = {
             return res.status(204).send()
         })
 
+        // create an attachment
         router.post('/:resource/attachments', async(req, res) => {
             const permres = await utils.userFromHeaderHasPerm(db, req.headers.authorization, 'MANAGE_RESOURCES')
             if (permres.err) return res.send(permres)
@@ -192,6 +203,7 @@ module.exports = {
             })
         })
 
+        // update an attachment
         router.put('/:resource/attachments/:attachment', async(req, res) => {
             const permres = await utils.userFromHeaderHasPerm(db, req.headers.authorization, 'MANAGE_RESOURCES')
             if (permres.err) return res.send(permres)
@@ -220,6 +232,7 @@ module.exports = {
             return res.send(attachment)
         })
 
+        // delete an attachment
         router.delete('/:resource/attachments/:attachment', async(req, res) => {
             const permres = await utils.userFromHeaderHasPerm(db, req.headers.authorization, 'MANAGE_RESOURCES')
             if (permres.err) return res.send(permres)
@@ -235,6 +248,7 @@ module.exports = {
             return res.status(204).send()
         })
 
+        // create an attachment (for an instance)
         router.post('/:resource/instances/:instance/attachments', async(req, res) => {
             const permres = await utils.userFromHeaderHasPerm(db, req.headers.authorization, 'MANAGE_RESOURCES')
             if (permres.err) return res.send(permres)
@@ -263,6 +277,7 @@ module.exports = {
             })
         })
 
+        // update an attachment (for an instance)
         router.put('/:resource/instances/:instance/attachments/:attachment', async(req, res) => {
             const permres = await utils.userFromHeaderHasPerm(db, req.headers.authorization, 'MANAGE_RESOURCES')
             if (permres.err) return res.send(permres)
@@ -294,6 +309,7 @@ module.exports = {
             return res.send(attachment)
         })
 
+        // delete an attachment (for an instance)
         router.delete('/:resource/instances/:instance/attachments/:attachment', async(req, res) => {
             const permres = await utils.userFromHeaderHasPerm(db, req.headers.authorization, 'MANAGE_RESOURCES')
             if (permres.err) return res.send(permres)

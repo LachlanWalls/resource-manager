@@ -1,5 +1,9 @@
 (async() => {
 
+    /* resources.js
+    - render all resources
+    */
+
     let elm = window.renderElement
 
     window.dcache.resources = await api.get('/resources')

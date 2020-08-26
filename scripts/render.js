@@ -1,3 +1,5 @@
+// This file is used to load a HTML file, and replace certain keywords (in this case, used for the website name).
+
 const fs = require('fs')
 const config = require('../config.json')
 const path = require('path')
